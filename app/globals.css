@@ -119,6 +119,7 @@ select.input-field {
 
 .btn-primary:hover {
   background: var(--violet-deep);
+  color: var(--ash-text);
 }
 
 .btn-primary:active {
@@ -156,6 +157,7 @@ select.input-field {
 .btn-secondary:hover {
   background: oklch(20% 0.008 290);
   border-color: oklch(28% 0.008 290);
+  color: var(--ash-text);
 }
 
 .btn-secondary:active {
@@ -199,6 +201,7 @@ select.input-field {
 
 .btn-danger:hover {
   background: var(--ember-red-deep);
+  color: var(--ash-text);
 }
 
 .btn-danger:active {
