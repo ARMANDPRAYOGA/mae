@@ -55,7 +55,7 @@ export default async function AdminMembersPage() {
                   <span className={`badge ${member.role === 'ADMIN' ? 'badge-admin' : 'badge-member'}`}>
                     {member.role}
                   </span>
-                  <AdminActions targetId={member.id} targetRole={member.role} currentUserId={user?.id || 0} />
+                  <AdminActions targetId={member.id} targetRole={member.role} currentUserId={user?.id || ''} />
                 </div>
               </div>
             )

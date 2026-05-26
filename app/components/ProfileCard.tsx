@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 interface ProfileCardProps {
   user: {
-    id: number
+    id: string
     name: string
     tiktokName: string
     bio?: string | null

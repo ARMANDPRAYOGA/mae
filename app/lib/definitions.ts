@@ -1,19 +1,14 @@
 export type UserRole = 'ADMIN' | 'MEMBER'
 
-export type SessionPayload = {
-  userId: number
-  role: UserRole
-  expiresAt: Date
-}
-
 export type FormState = {
   errors?: {
     name?: string[]
     tiktokName?: string[]
+    email?: string[]
     password?: string[]
-    id?: string[]
+    usernameOrEmail?: string[]
+    username?: string[]
   }
   message?: string
   success?: boolean
-  userId?: number
 }

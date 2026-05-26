@@ -28,7 +28,7 @@ export async function GET() {
         orderBy: { score: 'desc' },
       })
 
-      const userScores = new Map<number, number>()
+      const userScores = new Map<string, number>()
       for (const s of topScores) {
         userScores.set(s.userId, (userScores.get(s.userId) || 0) + s.score)
       }
@@ -73,7 +73,7 @@ export async function GET() {
     orderBy: { score: 'desc' },
   })
 
-  const leaderboard = new Map<number, { user: typeof scores[0]['user']; totalScore: number }>()
+  const leaderboard = new Map<string, { user: typeof scores[0]['user']; totalScore: number }>()
   for (const s of scores) {
     const existing = leaderboard.get(s.userId)
     if (existing) {

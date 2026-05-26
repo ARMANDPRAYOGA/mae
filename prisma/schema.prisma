@@ -3,36 +3,38 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  name         String
-  tiktokName   String
-  password     String
-  bio          String?
-  profilePhoto String?
-  tiktokLink   String?
-  role         String    @default("MEMBER")
-  createdAt    DateTime  @default(now())
+  id            String   @id
+  username      String   @unique
+  email         String   @unique
+  name          String
+  tiktokName    String
+  bio           String?
+  profilePhoto  String?
+  tiktokLink    String?
+  role          String   @default("MEMBER")
+  createdAt     DateTime @default(now())
 
-  scores       Score[]
-  achievements Achievement[]
-  createdGames Game[]        @relation("GameCreator")
-  createdEvents Event[]      @relation("EventCreator")
-  votesGiven   Vote[]        @relation("Voter")
-  votesReceived Vote[]       @relation("Target")
+  scores        Score[]
+  achievements  Achievement[]
+  createdGames  Game[]         @relation("GameCreator")
+  createdEvents Event[]        @relation("EventCreator")
+  votesGiven    Vote[]         @relation("Voter")
+  votesReceived Vote[]         @relation("Target")
 }
 
 model Game {
   id        Int        @id @default(autoincrement())
   title     String
-  type      String     // QUIZ or TEKATEKI
+  type      String
   createdAt DateTime   @default(now())
 
-  createdByUser Int
+  createdByUser String
   creator       User      @relation("GameCreator", fields: [createdByUser], references: [id])
   questions     Question[]
   scores        Score[]
@@ -42,7 +44,7 @@ model Question {
   id            Int    @id @default(autoincrement())
   gameId        Int
   questionText  String
-  options       String // JSON array for quiz options
+  options       String
   correctAnswer String
   clue          String?
 
@@ -51,7 +53,7 @@ model Question {
 
 model Score {
   id          Int      @id @default(autoincrement())
-  userId      Int
+  userId      String
   gameId      Int
   score       Int
   completedAt DateTime @default(now())
@@ -69,15 +71,15 @@ model Event {
   endDate     DateTime
   createdAt   DateTime @default(now())
 
-  createdByUser Int
+  createdByUser String
   creator       User @relation("EventCreator", fields: [createdByUser], references: [id])
 }
 
 model Vote {
-  id           Int      @id @default(autoincrement())
-  voterId      Int
-  targetAdminId Int
-  createdAt    DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  voterId       String
+  targetAdminId String
+  createdAt     DateTime @default(now())
 
   voter  User @relation("Voter", fields: [voterId], references: [id])
   target User @relation("Target", fields: [targetAdminId], references: [id])
@@ -87,7 +89,7 @@ model Vote {
 
 model Achievement {
   id       Int @id @default(autoincrement())
-  userId   Int
+  userId   String
   month    Int
   year     Int
   position Int

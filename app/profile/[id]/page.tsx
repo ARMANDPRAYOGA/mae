@@ -6,12 +6,9 @@ import { notFound } from 'next/navigation'
 export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const currentUser = await getUser()
-  const userId = parseInt(id, 10)
-
-  if (isNaN(userId)) notFound()
 
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id },
     select: {
       id: true, name: true, tiktokName: true, bio: true,
       profilePhoto: true, tiktokLink: true, role: true,
@@ -21,12 +18,12 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
   if (!user) notFound()
 
   const achievements = await prisma.achievement.findMany({
-    where: { userId },
+    where: { userId: id },
     orderBy: [{ year: 'desc' }, { month: 'desc' }],
   })
 
   const scores = await prisma.score.findMany({
-    where: { userId },
+    where: { userId: id },
     include: { game: { select: { title: true, type: true } } },
     orderBy: { completedAt: 'desc' },
   })

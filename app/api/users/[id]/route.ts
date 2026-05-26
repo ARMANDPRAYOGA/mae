@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/db'
-import { getSession } from '@/app/lib/session'
+import { getAuthUser } from '@/app/lib/auth-helpers'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await prisma.user.findUnique({
-    where: { id: parseInt(id, 10) },
+    where: { id },
     select: {
       id: true,
+      username: true,
       name: true,
       tiktokName: true,
       bio: true,
@@ -21,15 +22,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const authUser = await getAuthUser()
+  if (!authUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const userId = parseInt(id, 10)
   const body = await req.json()
 
-  // Only allow updating own profile or admin actions
-  if (session.userId !== userId && session.role !== 'ADMIN') {
+  if (authUser.id !== id && authUser.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
@@ -40,13 +39,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (body.tiktokLink !== undefined) updateData.tiktokLink = body.tiktokLink
   if (body.profilePhoto !== undefined) updateData.profilePhoto = body.profilePhoto
 
-  // Admin can change role
-  if (session.role === 'ADMIN' && body.role) {
+  if (authUser.role === 'ADMIN' && body.role) {
     updateData.role = body.role
   }
 
   const user = await prisma.user.update({
-    where: { id: userId },
+    where: { id },
     data: updateData,
     select: { id: true, name: true, role: true },
   })
@@ -55,19 +53,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session || session.role !== 'ADMIN') {
+  const authUser = await getAuthUser()
+  if (!authUser || authUser.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { id } = await params
-  const userId = parseInt(id, 10)
 
-  // Cannot delete self
-  if (session.userId === userId) {
+  if (authUser.id === id) {
     return NextResponse.json({ error: 'Cannot delete yourself' }, { status: 400 })
   }
 
-  await prisma.user.delete({ where: { id: userId } })
+  await prisma.user.delete({ where: { id } })
   return NextResponse.json({ success: true })
 }

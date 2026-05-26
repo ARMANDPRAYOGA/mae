@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 interface ProfileEditFormProps {
   user: {
-    id: number
+    id: string
     name: string
     tiktokName: string
     bio?: string | null

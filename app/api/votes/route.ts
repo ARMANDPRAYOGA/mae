@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/db'
-import { getSession } from '@/app/lib/session'
+import { getAuthUser } from '@/app/lib/auth-helpers'
 
 export async function GET() {
   const votes = await prisma.vote.findMany({
@@ -13,24 +13,22 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getSession()
-  if (!session || session.role !== 'ADMIN') {
+  const authUser = await getAuthUser()
+  if (!authUser || authUser.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const body = await req.json()
   const { targetAdminId } = body
 
-  // Cannot vote for yourself
-  if (session.userId === targetAdminId) {
+  if (authUser.id === targetAdminId) {
     return NextResponse.json({ error: 'Cannot vote for yourself' }, { status: 400 })
   }
 
-  // Check if already voted
   const existing = await prisma.vote.findUnique({
     where: {
       voterId_targetAdminId: {
-        voterId: session.userId,
+        voterId: authUser.id,
         targetAdminId,
       },
     },
@@ -42,12 +40,11 @@ export async function POST(req: NextRequest) {
 
   await prisma.vote.create({
     data: {
-      voterId: session.userId,
+      voterId: authUser.id,
       targetAdminId,
     },
   })
 
-  // Check if majority reached
   const totalAdmins = await prisma.user.count({ where: { role: 'ADMIN' } })
   const votesForTarget = await prisma.vote.count({ where: { targetAdminId } })
   const majority = Math.floor(totalAdmins / 2) + 1
@@ -57,7 +54,6 @@ export async function POST(req: NextRequest) {
       where: { id: targetAdminId },
       data: { role: 'MEMBER' },
     })
-    // Clean up votes for this target
     await prisma.vote.deleteMany({ where: { targetAdminId } })
   }
 

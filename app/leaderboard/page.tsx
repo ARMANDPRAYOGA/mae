@@ -23,7 +23,7 @@ export default async function LeaderboardPage() {
     orderBy: { score: 'desc' },
   })
 
-  const leaderboard = new Map<number, { user: typeof scores[0]['user']; totalScore: number }>()
+  const leaderboard = new Map<string, { user: typeof scores[0]['user']; totalScore: number }>()
   for (const s of scores) {
     const existing = leaderboard.get(s.userId)
     if (existing) {

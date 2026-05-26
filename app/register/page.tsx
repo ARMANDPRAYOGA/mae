@@ -12,12 +12,8 @@ export default function RegisterPage() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="card max-w-md w-full text-center">
           <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--green-ok)' }}>Registrasi Berhasil!</h1>
-          <div className="rounded-lg p-5 mb-5" style={{ background: 'var(--ink-panel)' }}>
-            <p className="text-sm mb-1" style={{ color: 'var(--ash-muted)' }}>ID Kamu:</p>
-            <p className="text-4xl font-bold text-score">{state.userId}</p>
-          </div>
           <p className="text-sm mb-6" style={{ color: 'var(--ash-muted)' }}>
-            Simpan ID ini untuk login. Jangan sampai hilang!
+            Akun kamu sudah dibuat. Silakan login untuk mulai bermain!
           </p>
           <Link href="/login" className="btn-primary w-full">
             Login Sekarang
@@ -38,6 +34,36 @@ export default function RegisterPage() {
         </div>
 
         <form action={action} className="space-y-5">
+          <div>
+            <label htmlFor="reg-username" className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Username</label>
+            <input
+              id="reg-username"
+              type="text"
+              name="username"
+              placeholder="Masukkan username"
+              className="input-field"
+              required
+            />
+            {state?.errors?.username && (
+              <p className="text-sm mt-1" style={{ color: 'var(--ember-red)' }}>{state.errors.username[0]}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="reg-email" className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Email</label>
+            <input
+              id="reg-email"
+              type="email"
+              name="email"
+              placeholder="Masukkan email"
+              className="input-field"
+              required
+            />
+            {state?.errors?.email && (
+              <p className="text-sm mt-1" style={{ color: 'var(--ember-red)' }}>{state.errors.email[0]}</p>
+            )}
+          </div>
+
           <div>
             <label htmlFor="reg-name" className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Nama</label>
             <input

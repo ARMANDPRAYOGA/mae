@@ -6,7 +6,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 
 interface NavbarProps {
   user?: {
-    id: number
+    id: string
     name: string
     role: string
   } | null

@@ -1,27 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
+import { createClient } from '@/app/lib/supabase/server'
 import path from 'path'
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const formData = await req.formData()
     const file = formData.get('file') as File | null
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
     const ext = path.extname(file.name) || '.jpg'
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`
-    const dir = path.join(process.cwd(), 'public', 'uploads')
-    const filepath = path.join(dir, filename)
+    const filePath = `${user.id}/${Date.now()}${ext}`
 
-    await mkdir(dir, { recursive: true })
-    await writeFile(filepath, buffer)
+    const { error } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: true,
+      })
 
-    return NextResponse.json({ url: `/uploads/${filename}` })
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(filePath)
+
+    return NextResponse.json({ url: urlData.publicUrl })
   } catch {
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
   }

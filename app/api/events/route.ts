@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/db'
-import { getSession } from '@/app/lib/session'
+import { getAuthUser } from '@/app/lib/auth-helpers'
 
 export async function GET() {
   const events = await prisma.event.findMany({ orderBy: { startDate: 'desc' } })
@@ -8,8 +8,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getSession()
-  if (!session || session.role !== 'ADMIN') {
+  const authUser = await getAuthUser()
+  if (!authUser || authUser.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       image: body.image || null,
       startDate: new Date(body.startDate),
       endDate: new Date(body.endDate),
-      createdByUser: session.userId,
+      createdByUser: authUser.id,
     },
   })
 

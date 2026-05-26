@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation'
 
 interface AdminActionsProps {
-  targetId: number
+  targetId: string
   targetRole: string
-  currentUserId: number
+  currentUserId: string
 }
 
 export default function AdminActions({ targetId, targetRole, currentUserId }: AdminActionsProps) {

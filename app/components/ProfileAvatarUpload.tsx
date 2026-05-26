@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 interface ProfileAvatarUploadProps {
   user: {
-    id: number
+    id: string
     name: string
     profilePhoto?: string | null
   }

@@ -19,17 +19,17 @@ export default function LoginPage() {
 
         <form action={action} className="space-y-5">
           <div>
-            <label htmlFor="login-id" className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>ID</label>
+            <label htmlFor="login-username" className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Username atau Email</label>
             <input
-              id="login-id"
+              id="login-username"
               type="text"
-              name="id"
-              placeholder="Masukkan ID"
+              name="usernameOrEmail"
+              placeholder="Masukkan username atau email"
               className="input-field"
               required
             />
-            {state?.errors?.id && (
-              <p className="text-sm mt-1" style={{ color: 'var(--ember-red)' }}>{state.errors.id[0]}</p>
+            {state?.errors?.usernameOrEmail && (
+              <p className="text-sm mt-1" style={{ color: 'var(--ember-red)' }}>{state.errors.usernameOrEmail[0]}</p>
             )}
           </div>
 

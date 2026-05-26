@@ -20,7 +20,7 @@ export default async function AdminVotesPage() {
   })
 
   const totalAdmins = admins.length
-  const voteMap = new Map<number, { targetName: string; voters: string[]; count: number }>()
+  const voteMap = new Map<string, { targetName: string; voters: string[]; count: number }>()
 
   for (const vote of votes) {
     const existing = voteMap.get(vote.targetAdminId)
@@ -52,7 +52,7 @@ export default async function AdminVotesPage() {
 
         <div className="card mb-8">
           <h3 className="text-xl font-semibold mb-5">Cast Vote</h3>
-          <VoteForm admins={admins} currentUserId={user?.id || 0} />
+          <VoteForm admins={admins} currentUserId={user?.id || ''} />
         </div>
 
         {voteMap.size > 0 ? (

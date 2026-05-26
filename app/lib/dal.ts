@@ -1,24 +1,23 @@
 import 'server-only'
 import { cache } from 'react'
-import { getSession } from './session'
+import { createClient } from '@/app/lib/supabase/server'
 import { prisma } from './db'
 import { redirect } from 'next/navigation'
 
-export const verifySession = cache(async () => {
-  const session = await getSession()
-  if (!session?.userId) {
+export const getUser = cache(async () => {
+  const supabase = await createClient()
+  const { data: { user: authUser } } = await supabase.auth.getUser()
+
+  if (!authUser) {
     redirect('/login')
   }
-  return { userId: session.userId, role: session.role }
-})
 
-export const getUser = cache(async () => {
-  const session = await verifySession()
   try {
     const user = await prisma.user.findUnique({
-      where: { id: session.userId },
+      where: { id: authUser.id },
       select: {
         id: true,
+        username: true,
         name: true,
         tiktokName: true,
         bio: true,

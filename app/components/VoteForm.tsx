@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 interface VoteFormProps {
-  admins: { id: number; name: string; tiktokName: string }[]
-  currentUserId: number
+  admins: { id: string; name: string; tiktokName: string }[]
+  currentUserId: string
 }
 
 export default function VoteForm({ admins, currentUserId }: VoteFormProps) {
@@ -15,7 +15,7 @@ export default function VoteForm({ admins, currentUserId }: VoteFormProps) {
 
   const otherAdmins = admins.filter((a) => a.id !== currentUserId)
 
-  const handleVote = async (targetId: number) => {
+  const handleVote = async (targetId: string) => {
     setLoading(true)
     setMessage('')
     const res = await fetch('/api/votes', {

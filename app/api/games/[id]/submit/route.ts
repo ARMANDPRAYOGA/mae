@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/db'
-import { getSession } from '@/app/lib/session'
+import { getAuthUser } from '@/app/lib/auth-helpers'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) {
+  const authUser = await getAuthUser()
+  if (!authUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   await prisma.score.create({
     data: {
-      userId: session.userId,
+      userId: authUser.id,
       gameId,
       score,
     },
