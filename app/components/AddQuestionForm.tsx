@@ -15,8 +15,9 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
     setLoading(true)
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const data: Record<string, unknown> = {
       questionText: formData.get('questionText'),
       correctAnswer: formData.get('correctAnswer'),
@@ -36,7 +37,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
     })
 
     if (res.ok) {
-      e.currentTarget.reset()
+      form.reset()
       setOptions(['', '', '', ''])
       router.refresh()
     }

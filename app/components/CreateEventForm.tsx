@@ -11,10 +11,11 @@ export default function CreateEventForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
     setLoading(true)
     setError('')
     setSuccess('')
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const data = {
       title: formData.get('title'),
       description: formData.get('description'),
@@ -32,7 +33,7 @@ export default function CreateEventForm() {
 
       if (res.ok) {
         setSuccess('Event berhasil dibuat!')
-        e.currentTarget.reset()
+        form.reset()
         router.refresh()
       } else {
         const body = await res.json().catch(() => ({}))

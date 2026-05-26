@@ -9,8 +9,9 @@ export default function CreateGameForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
     setLoading(true)
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const data = {
       title: formData.get('title'),
       type: formData.get('type'),
@@ -23,7 +24,7 @@ export default function CreateGameForm() {
     })
 
     if (res.ok) {
-      e.currentTarget.reset()
+      form.reset()
       router.refresh()
     }
     setLoading(false)
