@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  tiktokName   String
+  password     String
+  bio          String?
+  profilePhoto String?
+  tiktokLink   String?
+  role         String    @default("MEMBER")
+  createdAt    DateTime  @default(now())
+
+  scores       Score[]
+  achievements Achievement[]
+  createdGames Game[]        @relation("GameCreator")
+  createdEvents Event[]      @relation("EventCreator")
+  votesGiven   Vote[]        @relation("Voter")
+  votesReceived Vote[]       @relation("Target")
+}
+
+model Game {
+  id        Int        @id @default(autoincrement())
+  title     String
+  type      String     // QUIZ or TEKATEKI
+  createdAt DateTime   @default(now())
+
+  createdByUser Int
+  creator       User      @relation("GameCreator", fields: [createdByUser], references: [id])
+  questions     Question[]
+  scores        Score[]
+}
+
+model Question {
+  id            Int    @id @default(autoincrement())
+  gameId        Int
+  questionText  String
+  options       String // JSON array for quiz options
+  correctAnswer String
+  clue          String?
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+}
+
+model Score {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  gameId      Int
+  score       Int
+  completedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  image       String?
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+
+  createdByUser Int
+  creator       User @relation("EventCreator", fields: [createdByUser], references: [id])
+}
+
+model Vote {
+  id           Int      @id @default(autoincrement())
+  voterId      Int
+  targetAdminId Int
+  createdAt    DateTime @default(now())
+
+  voter  User @relation("Voter", fields: [voterId], references: [id])
+  target User @relation("Target", fields: [targetAdminId], references: [id])
+
+  @@unique([voterId, targetAdminId])
+}
+
+model Achievement {
+  id       Int @id @default(autoincrement())
+  userId   Int
+  month    Int
+  year     Int
+  position Int
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, month, year])
+}

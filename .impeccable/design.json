@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-26T15:00:00Z",
+  "title": "Design System: MAE - Manga Anime Edits",
+  "extensions": {
+    "colorMeta": {
+      "violet-pulse": {
+        "role": "primary",
+        "displayName": "Violet Pulse",
+        "canonical": "oklch(62% 0.25 290)",
+        "tonalRamp": [
+          "oklch(15% 0.08 290)",
+          "oklch(25% 0.12 290)",
+          "oklch(35% 0.17 290)",
+          "oklch(45% 0.21 290)",
+          "oklch(55% 0.24 290)",
+          "oklch(62% 0.25 290)",
+          "oklch(72% 0.20 290)",
+          "oklch(85% 0.12 290)"
+        ]
+      },
+      "sakura-glow": {
+        "role": "secondary",
+        "displayName": "Sakura Glow",
+        "canonical": "oklch(70% 0.18 350)",
+        "tonalRamp": [
+          "oklch(15% 0.06 350)",
+          "oklch(25% 0.10 350)",
+          "oklch(35% 0.14 350)",
+          "oklch(45% 0.16 350)",
+          "oklch(55% 0.18 350)",
+          "oklch(70% 0.18 350)",
+          "oklch(80% 0.14 350)",
+          "oklch(90% 0.08 350)"
+        ]
+      },
+      "ink-black": {
+        "role": "neutral",
+        "displayName": "Ink Black",
+        "canonical": "oklch(8% 0.008 290)",
+        "tonalRamp": [
+          "oklch(5% 0.005 290)",
+          "oklch(10% 0.008 290)",
+          "oklch(15% 0.008 290)",
+          "oklch(20% 0.008 290)",
+          "oklch(30% 0.008 290)",
+          "oklch(40% 0.008 290)",
+          "oklch(60% 0.005 290)",
+          "oklch(85% 0.005 290)"
+        ]
+      },
+      "ink-surface": {
+        "role": "neutral",
+        "displayName": "Ink Surface",
+        "canonical": "oklch(12% 0.008 290)"
+      },
+      "ink-panel": {
+        "role": "neutral",
+        "displayName": "Ink Panel",
+        "canonical": "oklch(16% 0.008 290)"
+      },
+      "ink-border": {
+        "role": "neutral",
+        "displayName": "Ink Border",
+        "canonical": "oklch(22% 0.008 290)"
+      },
+      "ink-input": {
+        "role": "neutral",
+        "displayName": "Ink Input",
+        "canonical": "oklch(14% 0.01 290)"
+      },
+      "ink-navbar": {
+        "role": "neutral",
+        "displayName": "Ink Navbar",
+        "canonical": "oklch(10% 0.008 290)"
+      },
+      "ash-text": {
+        "role": "neutral",
+        "displayName": "Ash Text",
+        "canonical": "oklch(93% 0.005 290)"
+      },
+      "ash-muted": {
+        "role": "neutral",
+        "displayName": "Ash Muted",
+        "canonical": "oklch(68% 0.008 290)"
+      },
+      "ember-red": {
+        "role": "tertiary",
+        "displayName": "Ember Red",
+        "canonical": "oklch(62% 0.22 25)",
+        "tonalRamp": [
+          "oklch(15% 0.06 25)",
+          "oklch(25% 0.10 25)",
+          "oklch(35% 0.14 25)",
+          "oklch(45% 0.18 25)",
+          "oklch(55% 0.20 25)",
+          "oklch(62% 0.22 25)",
+          "oklch(72% 0.18 25)",
+          "oklch(85% 0.10 25)"
+        ]
+      },
+      "gold-achievement": {
+        "role": "tertiary",
+        "displayName": "Gold Achievement",
+        "canonical": "oklch(78% 0.16 85)",
+        "tonalRamp": [
+          "oklch(20% 0.05 85)",
+          "oklch(30% 0.08 85)",
+          "oklch(40% 0.10 85)",
+          "oklch(50% 0.12 85)",
+          "oklch(60% 0.14 85)",
+          "oklch(78% 0.16 85)",
+          "oklch(85% 0.12 85)",
+          "oklch(92% 0.06 85)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles only. One per screen."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headers within a page."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card headings, game titles, event names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions, bio text, event details. Max 75ch line length."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Badges, metadata, timestamps, small hints. Always semibold."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "User IDs, scores, numerical data. Geist Mono."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "hover-transition",
+        "value": "200ms ease-out",
+        "purpose": "Standard hover state transition for all interactive elements."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 2px oklch(62% 0.25 290 / 0.2)",
+        "purpose": "Focus indicator for buttons, inputs, and links."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action button. Violet Pulse background, Ash Text. Used for primary actions like 'Mainkan', 'Login', 'Buat Game'.",
+      "html": "<button class=\"ds-btn-primary\">Mainkan</button>",
+      "css": ".ds-btn-primary { background: #8b5cf6; color: #ededed; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; font-family: Geist, system-ui, sans-serif; cursor: pointer; border: none; transition: background 0.2s ease-out, box-shadow 0.2s ease-out; } .ds-btn-primary:hover { background: #7c3aed; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(62% 0.25 290 / 0.2); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting action button. Ink Panel background with border. Used for 'Kembali', 'Keluar', 'Kelola Soal'.",
+      "html": "<button class=\"ds-btn-secondary\">Kembali</button>",
+      "css": ".ds-btn-secondary { background: #1e1e2e; color: #ededed; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; font-family: Geist, system-ui, sans-serif; cursor: pointer; border: 1px solid #2a2a3a; transition: background 0.2s ease-out; } .ds-btn-secondary:hover { background: #2a2a3e; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(62% 0.25 290 / 0.2); }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive action button. Ember Red background. Used for 'Hapus', 'Hapus Akun'.",
+      "html": "<button class=\"ds-btn-danger\">Hapus</button>",
+      "css": ".ds-btn-danger { background: #ef4444; color: #ededed; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; font-family: Geist, system-ui, sans-serif; cursor: pointer; border: none; transition: background 0.2s ease-out; } .ds-btn-danger:hover { background: #dc2626; } .ds-btn-danger:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(62% 0.25 290 / 0.2); }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text input with dark background and focus ring. Used for all form fields.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Masukkan ID\" />",
+      "css": ".ds-input { width: 100%; padding: 12px 16px; background: #1a1a2e; border: 1px solid #2a2a3a; border-radius: 8px; color: #ededed; font-size: 1rem; font-family: Geist, system-ui, sans-serif; transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out; } .ds-input:focus { outline: none; border-color: #8b5cf6; box-shadow: 0 0 0 2px oklch(62% 0.25 290 / 0.2); } .ds-input::placeholder { color: #a1a1aa; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Primary content container. Ink Surface background with subtle border. Used for game cards, profile cards, leaderboard rows.",
+      "html": "<div class=\"ds-card\"><h3>Game Title</h3><p>Description text</p></div>",
+      "css": ".ds-card { background: #16161d; border: 1px solid #2a2a3a; border-radius: 12px; padding: 24px; color: #ededed; font-family: Geist, system-ui, sans-serif; transition: border-color 0.2s ease-out; } .ds-card:hover { border-color: #8b5cf6; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Pill-shaped label for roles and categories. Translucent background with saturated text.",
+      "html": "<span class=\"ds-badge ds-badge-admin\">ADMIN</span><span class=\"ds-badge ds-badge-member\">MEMBER</span>",
+      "css": ".ds-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; font-family: Geist, system-ui, sans-serif; } .ds-badge-admin { background: oklch(70% 0.18 350 / 0.2); color: #f472b6; } .ds-badge-member { background: oklch(62% 0.25 290 / 0.2); color: #8b5cf6; } .ds-badge-gold { background: oklch(78% 0.16 85 / 0.2); color: #eab308; }"
+    },
+    {
+      "name": "Navigation Bar",
+      "kind": "nav",
+      "refersTo": "navbar",
+      "description": "Sticky top navigation with brand wordmark, role-aware links, and user info. Gradient text on brand name is the only allowed gradient text in the system.",
+      "html": "<nav class=\"ds-navbar\"><a class=\"ds-navbar-brand\">MAE - Manga Anime Edits</a><div class=\"ds-navbar-links\"><a class=\"ds-navbar-link ds-navbar-link-active\">Beranda</a><a class=\"ds-navbar-link\">Games</a><a class=\"ds-navbar-link\">Leaderboard</a></div></nav>",
+      "css": ".ds-navbar { position: sticky; top: 0; z-index: 50; background: #0f0f17; border-bottom: 1px solid #2a2a3a; height: 64px; display: flex; align-items: center; padding: 0 16px; font-family: Geist, system-ui, sans-serif; } .ds-navbar-brand { font-size: 1.25rem; font-weight: 700; background: linear-gradient(135deg, #8b5cf6, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } .ds-navbar-links { display: flex; gap: 4px; margin-left: 24px; } .ds-navbar-link { padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; color: #a1a1aa; text-decoration: none; transition: background 0.2s ease-out, color 0.2s ease-out; } .ds-navbar-link:hover { color: #ededed; background: #1e1e2e; } .ds-navbar-link-active { background: #8b5cf6; color: #ededed; }"
+    },
+    {
+      "name": "Profile Avatar",
+      "kind": "custom",
+      "refersTo": "profile-avatar",
+      "description": "Circular identity marker with fallback initial. Sizes: 40px (list), 48px (leaderboard), 56px (profile card), 96px (profile page).",
+      "html": "<div class=\"ds-avatar ds-avatar-md\">M</div>",
+      "css": ".ds-avatar { border-radius: 9999px; background: #8b5cf6; color: #ededed; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: Geist, system-ui, sans-serif; overflow: hidden; } .ds-avatar-sm { width: 40px; height: 40px; font-size: 0.875rem; } .ds-avatar-md { width: 48px; height: 48px; font-size: 1rem; } .ds-avatar-lg { width: 56px; height: 56px; font-size: 1.25rem; } .ds-avatar-xl { width: 96px; height: 96px; font-size: 2rem; } .ds-avatar img { width: 100%; height: 100%; object-fit: cover; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tournament Stage",
+    "overview": "MAE is a competitive arena for manga/anime fans. The interface is a dark stage where player identities, scores, and rankings command attention. Every screen is built around one question: who's winning, and can you beat them?\n\nThis system rejects generic SaaS dashboards with their blue-white corporatism, overly childish gamification with cartoon badges, dark-mode-for-the-sake-of-dark-mode crypto/neon aesthetics, and cluttered gaming portals with flashing banners. The dark theme is not a style choice; it's the stage.\n\nThe density is medium: enough information to feel competitive, not enough to overwhelm. Scores, badges, and player names are the visual hierarchy's first-class citizens. Navigation is secondary to play.",
+    "keyCharacteristics": [
+      "Dark canvas with purple and pink as the only accent colors, creating a focused spotlight effect",
+      "Tactile, punchy interactions: buttons respond with clear hover shifts, cards acknowledge your presence with border highlights",
+      "Scores and rankings are always visible; competition is the ambient atmosphere",
+      "Indonesian-first copy, casual and energetic, never corporate",
+      "Mobile-first: every touch target is generous, every layout stacks cleanly"
+    ],
+    "rules": [
+      { "name": "The Spotlight Rule", "body": "Only two colors carry action: Violet Pulse for interaction, Sakura Glow for identity. If an element isn't a button, input, or link, it doesn't get Violet Pulse. If it isn't about community or role, it doesn't get Sakura Glow.", "section": "colors" },
+      { "name": "The Gold Rarity Rule", "body": "Gold Achievement appears only on earned achievements and top-3 leaderboard positions. If you see gold on a button or a decorative element, the design is wrong.", "section": "colors" },
+      { "name": "The One Display Rule", "body": "One display heading per screen. If you have two 2.25rem headings on the same page, one of them is wrong. Use headline for the second.", "section": "typography" },
+      { "name": "The Mono Data Rule", "body": "Scores, IDs, and numerical rankings use Geist Mono. Names, descriptions, and labels do not.", "section": "typography" },
+      { "name": "The Flat Stage Rule", "body": "Surfaces are flat. Depth is conveyed through color, not shadow. If you're adding a box-shadow, you're adding visual noise, not hierarchy.", "section": "elevation" },
+      { "name": "The Focus Ring Rule", "body": "Every interactive element must have a visible focus indicator. The Violet Pulse ring at 20% opacity is the standard.", "section": "elevation" }
+    ],
+    "dos": [
+      "Use Violet Pulse exclusively for interactive elements (buttons, links, active states, focus rings)",
+      "Keep the dark palette consistent. Every surface should be one of: Ink Black, Ink Surface, Ink Panel, Ink Input, Ink Navbar",
+      "Use Geist Mono for scores, IDs, and numerical data",
+      "Keep badges pill-shaped with translucent backgrounds",
+      "Make every touch target at least 44px tall on mobile",
+      "Use Indonesian for all UI copy",
+      "Show one display heading per screen",
+      "Use 200ms transitions on hover states"
+    ],
+    "donts": [
+      "Use gradient text anywhere except the 'MAE - Manga Anime Edits' brand wordmark",
+      "Use generic SaaS dashboard aesthetics (blue/white, corporate card grids, boring tables)",
+      "Add cartoon badges, excessive animations, or childish gamification elements",
+      "Use dark mode with purple gradients and neon accents as a default aesthetic",
+      "Create cluttered gaming portals with flashing banners",
+      "Add box-shadows to cards or containers",
+      "Use display fonts in buttons, labels, or data",
+      "Nest cards inside cards",
+      "Use #000 or #fff directly",
+      "Animate layout properties (width, height, margin, padding)",
+      "Use modals as a first solution"
+    ]
+  }
+}
