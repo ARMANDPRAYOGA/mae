@@ -6,9 +6,9 @@ import Link from 'next/link'
 import AddQuestionForm from '@/app/components/AddQuestionForm'
 import DeleteQuestionButton from '@/app/components/DeleteQuestionButton'
 
-export default async function QuestionsPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const gameId = parseInt(id, 10)
+export default async function QuestionsPage({ searchParams }: { searchParams: Promise<{ gameId?: string }> }) {
+  const { gameId: gameIdStr } = await searchParams
+  const gameId = gameIdStr ? parseInt(gameIdStr, 10) : NaN
   if (isNaN(gameId)) notFound()
 
   const user = await getUser()

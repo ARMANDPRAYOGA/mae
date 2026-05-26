@@ -40,7 +40,7 @@ export default async function AdminGamesPage() {
                 </p>
               </div>
               <div className="flex gap-2">
-                <Link href={`/admin/games/${game.id}/questions`} className="btn-primary text-sm py-1 px-3">
+                <Link href={`/admin/questions?gameId=${game.id}`} className="btn-primary text-sm py-1 px-3">
                   Kelola Soal
                 </Link>
                 <DeleteGameButton gameId={game.id} />
