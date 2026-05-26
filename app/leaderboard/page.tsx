@@ -103,13 +103,13 @@ export default async function LeaderboardPage() {
 
         {sorted.length === 0 && (
           <div className="text-center py-16">
-            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--ink-panel)' }}>
-              <svg className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--gold-achieve-dim)' }}>
+              <svg className="w-8 h-8" style={{ color: 'var(--gold-achieve)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-4.5A3.375 3.375 0 0019.875 10.875 3.375 3.375 0 0016.5 7.5h0a3.375 3.375 0 00-3.375 3.375v0A3.375 3.375 0 019.75 7.5h0a3.375 3.375 0 00-3.375 3.375 3.375 3.375 0 00-3.375 3.375V18.75m9 0h-9" />
               </svg>
             </div>
-            <p className="font-semibold mb-1">Belum ada skor bulan ini</p>
-            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Mainkan game untuk masuk leaderboard!</p>
+            <p className="font-semibold mb-1">Leaderboard kosong</p>
+            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Mainkan game bulan ini untuk merebut peringkat pertama!</p>
           </div>
         )}
       </main>

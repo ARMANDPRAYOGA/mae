@@ -56,13 +56,13 @@ export default async function EventsPage() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--ink-panel)' }}>
-              <svg className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--sakura-glow-dim)' }}>
+              <svg className="w-8 h-8" style={{ color: 'var(--sakura-glow)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
               </svg>
             </div>
-            <p className="font-semibold mb-1">Belum ada event</p>
-            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Event yang diadakan admin akan muncul di sini.</p>
+            <p className="font-semibold mb-1">Belum ada event berlangsung</p>
+            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Event komunitas akan tampil di sini saat admin membuatnya.</p>
           </div>
         )}
       </main>

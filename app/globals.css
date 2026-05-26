@@ -15,6 +15,7 @@
   --sakura-glow-dim: oklch(70% 0.18 350 / 0.2);
   --ember-red: oklch(62% 0.22 25);
   --ember-red-deep: oklch(52% 0.20 25);
+  --ember-red-dim: oklch(62% 0.22 25 / 0.2);
   --gold-achieve: oklch(78% 0.16 85);
   --gold-achieve-dim: oklch(78% 0.16 85 / 0.2);
 
