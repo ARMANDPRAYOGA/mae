@@ -1,6 +1,7 @@
 import { getUser } from '@/app/lib/dal'
 import { prisma } from '@/app/lib/db'
 import Navbar from '@/app/components/Navbar'
+import ProfileAvatarUpload from '@/app/components/ProfileAvatarUpload'
 import ProfileEditForm from '@/app/components/ProfileEditForm'
 
 export default async function MyProfilePage() {
@@ -26,13 +27,7 @@ export default async function MyProfilePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
             <div className="card text-center">
-              <div className="avatar avatar-xl mx-auto mb-4">
-                {user?.profilePhoto ? (
-                  <img src={user.profilePhoto} alt={user.name} />
-                ) : (
-                  user?.name.charAt(0).toUpperCase()
-                )}
-              </div>
+              {user && <ProfileAvatarUpload user={user} />}
               <h2 className="text-xl font-bold">{user?.name}</h2>
               <p className="text-sm mt-0.5" style={{ color: 'var(--ash-muted)' }}>@{user?.tiktokName}</p>
               <span className={`badge ${user?.role === 'ADMIN' ? 'badge-admin' : 'badge-member'} mt-3`}>
@@ -70,12 +65,12 @@ export default async function MyProfilePage() {
 
           <div className="md:col-span-2 space-y-6">
             <div className="card">
-              <h3 className="font-semibold text-lg mb-5">Edit Profil</h3>
+              <h3 className="text-xl font-semibold mb-5">Edit Profil</h3>
               <ProfileEditForm user={user} />
             </div>
 
             <div className="card">
-              <h3 className="font-semibold text-lg mb-5">Riwayat Skor</h3>
+              <h3 className="text-xl font-semibold mb-5">Riwayat Skor</h3>
               {scores.length > 0 ? (
                 <div className="space-y-0">
                   {scores.map((s) => (

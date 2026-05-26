@@ -51,23 +51,29 @@ export default async function LeaderboardPage() {
 
         {sorted.length > 0 && (
           <div className="grid grid-cols-3 gap-4 mb-10">
-            {sorted.slice(0, 3).map((entry, i) => (
-              <div
-                key={entry.user.id}
-                className={`card text-center ${i === 0 ? 'md:order-2' : i === 1 ? 'md:order-1' : 'md:order-3'}`}
-              >
-                <p className="text-3xl mb-3">{medals[i + 1]}</p>
-                <div className="avatar avatar-md mx-auto mb-3">
-                  {entry.user.profilePhoto ? (
-                    <img src={entry.user.profilePhoto} alt={entry.user.name} />
-                  ) : (
-                    entry.user.name.charAt(0).toUpperCase()
-                  )}
+            {sorted.slice(0, 3).map((entry, i) => {
+              const isFirst = i === 0
+              return (
+                <div
+                  key={entry.user.id}
+                  className={`card text-center ${i === 0 ? 'md:order-2' : i === 1 ? 'md:order-1' : 'md:order-3'}`}
+                  style={isFirst ? { borderColor: 'var(--gold-achieve)', background: 'var(--ink-panel)' } : undefined}
+                >
+                  <p className="text-3xl mb-3">{medals[i + 1]}</p>
+                  <div className={`avatar mx-auto mb-3 ${isFirst ? 'avatar-lg' : 'avatar-md'}`} style={isFirst ? { background: 'var(--gold-achieve)' } : undefined}>
+                    {entry.user.profilePhoto ? (
+                      <img src={entry.user.profilePhoto} alt={entry.user.name} />
+                    ) : (
+                      entry.user.name.charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <p className={`font-semibold mb-1 ${isFirst ? 'text-base' : 'text-sm'}`}>{entry.user.name}</p>
+                  <p className={`font-bold ${isFirst ? 'text-2xl' : 'text-xl'}`} style={{ color: isFirst ? 'var(--gold-achieve)' : 'var(--violet-pulse)', fontFamily: 'var(--font-geist-mono)' }}>
+                    {entry.totalScore}
+                  </p>
                 </div>
-                <p className="font-semibold text-sm mb-1">{entry.user.name}</p>
-                <p className="text-xl font-bold text-score">{entry.totalScore}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
 
@@ -97,7 +103,13 @@ export default async function LeaderboardPage() {
 
         {sorted.length === 0 && (
           <div className="text-center py-16">
-            <p style={{ color: 'var(--ash-dim)' }}>Belum ada skor bulan ini.</p>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--ink-panel)' }}>
+              <svg className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+            <p className="font-semibold mb-1">Belum ada skor bulan ini</p>
+            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Mainkan game untuk masuk leaderboard!</p>
           </div>
         )}
       </main>

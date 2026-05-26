@@ -21,7 +21,7 @@ export default async function AdminGamesPage() {
         </div>
 
         <div className="card mb-8">
-          <h3 className="font-semibold text-lg mb-5">Buat Game Baru</h3>
+          <h3 className="text-xl font-semibold mb-5">Buat Game Baru</h3>
           <CreateGameForm />
         </div>
 

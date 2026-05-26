@@ -46,7 +46,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm text-gray-400 mb-1">Pertanyaan</label>
+        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Pertanyaan</label>
         <input
           type="text"
           name="questionText"
@@ -58,7 +58,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
 
       {gameType === 'QUIZ' && (
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Pilihan Jawaban</label>
+          <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Pilihan Jawaban</label>
           <div className="grid grid-cols-2 gap-2">
             {options.map((opt, i) => (
               <input
@@ -81,7 +81,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
 
       {gameType === 'TEKATEKI' && (
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Clue (opsional)</label>
+          <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Clue (opsional)</label>
           <input
             type="text"
             name="clue"
@@ -92,7 +92,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
       )}
 
       <div>
-        <label className="block text-sm text-gray-400 mb-1">Jawaban Benar</label>
+        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Jawaban Benar</label>
         <input
           type="text"
           name="correctAnswer"

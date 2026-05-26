@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 
 interface Question {
@@ -20,7 +20,6 @@ interface Game {
 
 export default function PlayGamePage() {
   const params = useParams()
-  const router = useRouter()
   const [game, setGame] = useState<Game | null>(null)
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<Record<number, string>>({})
@@ -70,8 +69,28 @@ export default function PlayGamePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p style={{ color: 'var(--ash-muted)' }}>Memuat game...</p>
+      <div className="min-h-screen">
+        <nav className="sticky top-0 z-50" style={{ background: 'var(--ink-navbar)', borderBottom: '1px solid var(--ink-border)' }}>
+          <div className="max-w-4xl mx-auto px-4 md:px-6 h-14 flex items-center">
+            <div className="w-16 h-4 rounded" style={{ background: 'var(--ink-panel)' }} />
+          </div>
+        </nav>
+        <main className="max-w-2xl mx-auto px-4 md:px-6 py-8">
+          <div className="w-48 h-8 rounded mb-8" style={{ background: 'var(--ink-panel)' }} />
+          <div className="card mb-6">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-9 h-9 rounded-lg" style={{ background: 'var(--ink-panel)' }} />
+              <div className="w-16 h-5 rounded-full" style={{ background: 'var(--ink-panel)' }} />
+            </div>
+            <div className="w-full h-6 rounded mb-5" style={{ background: 'var(--ink-panel)' }} />
+            <div className="space-y-2">
+              <div className="w-full h-12 rounded-lg" style={{ background: 'var(--ink-panel)' }} />
+              <div className="w-full h-12 rounded-lg" style={{ background: 'var(--ink-panel)' }} />
+              <div className="w-full h-12 rounded-lg" style={{ background: 'var(--ink-panel)' }} />
+              <div className="w-full h-12 rounded-lg" style={{ background: 'var(--ink-panel)' }} />
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
@@ -121,12 +140,21 @@ export default function PlayGamePage() {
             {current + 1} / {game.questions.length}
           </span>
         </div>
+        <div className="h-1" style={{ background: 'var(--ink-panel)' }}>
+          <div
+            className="h-1 transition-all duration-300"
+            style={{
+              width: `${((current + 1) / game.questions.length) * 100}%`,
+              background: 'var(--violet-pulse)',
+            }}
+          />
+        </div>
       </nav>
 
       <main className="max-w-2xl mx-auto px-4 md:px-6 py-8">
         <h1 className="text-2xl font-bold mb-8">{game.title}</h1>
 
-        <div className="card mb-6">
+        <div className="card mb-6 animate-in">
           <div className="flex items-center gap-3 mb-5">
             <span className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: 'var(--violet-pulse)', color: 'var(--ash-text)' }}>
               {current + 1}

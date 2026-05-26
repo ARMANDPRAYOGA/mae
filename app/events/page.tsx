@@ -13,10 +13,11 @@ export default async function EventsPage() {
   return (
     <div className="min-h-screen">
       <Navbar user={user} />
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+      <main className="max-w-4xl mx-auto px-4 md:px-6 py-8">
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Events</h1>
           <p style={{ color: 'var(--ash-muted)' }}>Event yang diadakan oleh admin MAE</p>
+          <p className="text-xs mt-1" style={{ color: 'var(--ash-dim)' }}>{events.length} event tercatat</p>
         </div>
 
         {events.length > 0 ? (
@@ -44,7 +45,7 @@ export default async function EventsPage() {
                   <p className="text-xs" style={{ color: 'var(--ash-dim)' }}>
                     {event.startDate.toLocaleDateString('id-ID', {
                       day: 'numeric', month: 'long', year: 'numeric',
-                    })}{' '}&mdash;{' '}
+                    })}{' '}-{' '}
                     {event.endDate.toLocaleDateString('id-ID', {
                       day: 'numeric', month: 'long', year: 'numeric',
                     })}
@@ -55,7 +56,13 @@ export default async function EventsPage() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p style={{ color: 'var(--ash-dim)' }}>Belum ada event.</p>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--ink-panel)' }}>
+              <svg className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="font-semibold mb-1">Belum ada event</p>
+            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Event yang diadakan admin akan muncul di sini.</p>
           </div>
         )}
       </main>

@@ -35,7 +35,7 @@ export default async function QuestionsPage({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="card mb-8">
-          <h3 className="font-semibold text-lg mb-5">Tambah Pertanyaan</h3>
+          <h3 className="text-xl font-semibold mb-5">Tambah Pertanyaan</h3>
           <AddQuestionForm gameId={gameId} gameType={game.type} />
         </div>
 

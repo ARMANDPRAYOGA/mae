@@ -79,7 +79,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
         </div>
 
         <div className="card">
-          <h3 className="font-semibold text-lg mb-5">Riwayat Skor</h3>
+          <h3 className="text-xl font-semibold mb-5">Riwayat Skor</h3>
           {scores.length > 0 ? (
             <div className="space-y-0">
               {scores.map((s) => (

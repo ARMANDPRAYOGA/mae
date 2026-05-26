@@ -51,7 +51,7 @@ export default async function AdminVotesPage() {
         </div>
 
         <div className="card mb-8">
-          <h3 className="font-semibold text-lg mb-5">Cast Vote</h3>
+          <h3 className="text-xl font-semibold mb-5">Cast Vote</h3>
           <VoteForm admins={admins} currentUserId={user?.id || 0} />
         </div>
 
@@ -80,7 +80,13 @@ export default async function AdminVotesPage() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p style={{ color: 'var(--ash-dim)' }}>Belum ada vote.</p>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--ink-panel)' }}>
+              <svg className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="font-semibold mb-1">Belum ada vote</p>
+            <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>Vote untuk menghapus admin akan muncul di sini.</p>
           </div>
         )}
       </main>
