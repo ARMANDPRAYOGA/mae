@@ -3,7 +3,7 @@ import { createClient } from '@/app/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import path from 'path'
 
-const BUCKET = 'avatars'
+const BUCKET = 'events'
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,8 +19,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Ukuran file maksimal 2MB' }, { status: 400 })
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: 'Ukuran file maksimal 5MB' }, { status: 400 })
     }
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     if (!bucketExists) {
       const { error: createError } = await supabaseAdmin.storage.createBucket(BUCKET, {
         public: true,
-        fileSizeLimit: 2 * 1024 * 1024,
+        fileSizeLimit: 5 * 1024 * 1024,
         allowedMimeTypes: allowedTypes,
       })
       if (createError) {

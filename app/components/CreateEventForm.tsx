@@ -23,9 +23,8 @@ export default function CreateEventForm() {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('bucket', 'events')
 
-      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const res = await fetch('/api/upload/events', { method: 'POST', body: formData })
       const data = await res.json()
 
       if (!res.ok) {
