@@ -19,13 +19,19 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const gameId = parseInt(id, 10)
   const body = await req.json()
 
+  const questionType = body.questionType || 'MULTIPLE_CHOICE'
+  const points = body.points || 1
+
   const question = await prisma.question.create({
     data: {
       gameId,
       questionText: body.questionText,
+      questionType,
       options: JSON.stringify(body.options || []),
       correctAnswer: body.correctAnswer,
       clue: body.clue || null,
+      points,
+      image: body.image || null,
     },
   })
 

@@ -44,9 +44,18 @@ export default async function QuestionsPage({ searchParams }: { searchParams: Pr
             <div key={q.id} className="card">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold mb-1" style={{ color: 'var(--ash-dim)' }}>Soal {i + 1}</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-xs font-semibold" style={{ color: 'var(--ash-dim)' }}>Soal {i + 1}</p>
+                    <span className="badge" style={{ background: 'var(--ink-panel)', color: 'var(--ash-muted)' }}>
+                      {q.questionType === 'MULTIPLE_CHOICE' ? 'Pilihan Ganda' : 'Isian'}
+                    </span>
+                    <span className="badge badge-gold">{q.points} poin</span>
+                  </div>
                   <p className="font-medium mb-2">{q.questionText}</p>
-                  {game.type === 'QUIZ' && (
+                  {q.image && (
+                    <img src={q.image} alt="Gambar soal" className="w-full max-w-xs rounded-lg mb-2 border" style={{ borderColor: 'var(--ink-border)' }} />
+                  )}
+                  {q.questionType === 'MULTIPLE_CHOICE' && (
                     <div className="flex flex-wrap gap-2 mb-2">
                       {JSON.parse(q.options).map((opt: string, j: number) => (
                         <span

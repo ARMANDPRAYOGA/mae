@@ -16,12 +16,23 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const questions = await prisma.question.findMany({ where: { gameId } })
 
   let score = 0
+  const results: Record<string, { correct: boolean; points: number }> = {}
+
   for (const q of questions) {
     const userAnswer = answers[q.id.toString()]
-    if (userAnswer && userAnswer.toLowerCase().trim() === q.correctAnswer.toLowerCase().trim()) {
-      score++
+    const isCorrect = userAnswer && userAnswer.toLowerCase().trim() === q.correctAnswer.toLowerCase().trim()
+
+    if (isCorrect) {
+      score += q.points
+    }
+
+    results[q.id.toString()] = {
+      correct: !!isCorrect,
+      points: isCorrect ? q.points : 0,
     }
   }
+
+  const totalPoints = questions.reduce((sum, q) => sum + q.points, 0)
 
   await prisma.score.create({
     data: {
@@ -31,5 +42,5 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     },
   })
 
-  return NextResponse.json({ score, total: questions.length })
+  return NextResponse.json({ score, totalPoints, results })
 }

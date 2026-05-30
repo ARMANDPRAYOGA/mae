@@ -7,8 +7,11 @@ import Link from 'next/link'
 interface Question {
   id: number
   questionText: string
+  questionType: string
   options: string
   clue?: string | null
+  points: number
+  image?: string | null
 }
 
 interface Game {
@@ -18,18 +21,24 @@ interface Game {
   questions: Question[]
 }
 
+interface QuestionResult {
+  correct: boolean
+  points: number
+}
+
 export default function PlayGamePage() {
   const params = useParams()
   const [game, setGame] = useState<Game | null>(null)
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [submitted, setSubmitted] = useState(false)
-  const [result, setResult] = useState<{ score: number; total: number } | null>(null)
+  const [result, setResult] = useState<{ score: number; totalPoints: number; results: Record<string, QuestionResult> } | null>(null)
   const [loading, setLoading] = useState(true)
   const [answer, setAnswer] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    fetch(`/api/games/${params.id}`)
+    fetch(`/api/games/${params.id}?shuffle=true`)
       .then((res) => res.json())
       .then((data) => {
         setGame(data)
@@ -57,14 +66,20 @@ export default function PlayGamePage() {
 
   const handleSubmit = async () => {
     if (!game) return
-    const res = await fetch(`/api/games/${game.id}/submit`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers }),
-    })
-    const data = await res.json()
-    setResult(data)
-    setSubmitted(true)
+    setSubmitting(true)
+    try {
+      const res = await fetch(`/api/games/${game.id}/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers }),
+      })
+      const data = await res.json()
+      setResult(data)
+      setSubmitted(true)
+    } catch {
+      // silent
+    }
+    setSubmitting(false)
   }
 
   if (loading) {
@@ -109,9 +124,26 @@ export default function PlayGamePage() {
         <div className="card max-w-md w-full text-center">
           <h1 className="text-3xl font-bold mb-5" style={{ color: 'var(--green-ok)' }}>Selesai!</h1>
           <div className="rounded-lg p-6 mb-6" style={{ background: 'var(--ink-panel)' }}>
-            <p className="text-sm mb-2" style={{ color: 'var(--ash-muted)' }}>Skor Kamu</p>
-            <p className="text-5xl font-bold text-score">{result.score}<span className="text-2xl" style={{ color: 'var(--ash-dim)' }}>/{result.total}</span></p>
+            <p className="text-sm mb-2" style={{ color: 'var(--ash-muted)' }}>Poin Kamu</p>
+            <p className="text-5xl font-bold text-score">{result.score}<span className="text-2xl" style={{ color: 'var(--ash-dim)' }}>/{result.totalPoints}</span></p>
           </div>
+
+          <div className="space-y-2 mb-6 text-left">
+            {game.questions.map((q, i) => {
+              const qResult = result.results[q.id.toString()]
+              return (
+                <div key={q.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--ink-panel)' }}>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">Soal {i + 1}: {q.questionText}</p>
+                  </div>
+                  <span className="text-sm font-bold ml-3" style={{ color: qResult?.correct ? 'var(--green-ok)' : 'var(--ember-red)' }}>
+                    {qResult?.correct ? `+${q.points}` : '0'}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+
           <div className="flex gap-3">
             <Link href="/games" className="btn-secondary flex-1 text-center text-sm">
               Kembali
@@ -159,12 +191,17 @@ export default function PlayGamePage() {
             <span className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: 'var(--violet-pulse)', color: 'var(--ash-text)' }}>
               {current + 1}
             </span>
-            <span className={`badge ${game.type === 'QUIZ' ? 'badge-quiz' : 'badge-tekateki'}`}>
-              {game.type === 'QUIZ' ? 'Quiz' : 'Teka-Teki'}
+            <span className={`badge ${question.questionType === 'MULTIPLE_CHOICE' ? 'badge-quiz' : 'badge-tekateki'}`}>
+              {question.questionType === 'MULTIPLE_CHOICE' ? 'Pilihan Ganda' : 'Isian'}
             </span>
+            <span className="badge badge-gold">{question.points} poin</span>
           </div>
 
           <p className="text-lg font-medium mb-5">{question.questionText}</p>
+
+          {question.image && (
+            <img src={question.image} alt="Gambar soal" className="w-full max-w-sm rounded-lg mb-5 border" style={{ borderColor: 'var(--ink-border)' }} />
+          )}
 
           {game.type === 'TEKATEKI' && question.clue && (
             <div className="rounded-lg p-4 mb-5" style={{ background: 'var(--ink-panel)' }}>
@@ -175,7 +212,7 @@ export default function PlayGamePage() {
             </div>
           )}
 
-          {game.type === 'QUIZ' ? (
+          {question.questionType === 'MULTIPLE_CHOICE' ? (
             <div className="space-y-2">
               {options.map((opt: string, i: number) => (
                 <button
@@ -210,8 +247,8 @@ export default function PlayGamePage() {
         </div>
 
         {allAnswered && (
-          <button onClick={handleSubmit} className="btn-primary w-full text-base py-3">
-            Submit Jawaban
+          <button onClick={handleSubmit} disabled={submitting} className="btn-primary w-full text-base py-3">
+            {submitting ? 'Mengumpulkan...' : 'Submit Jawaban'}
           </button>
         )}
 

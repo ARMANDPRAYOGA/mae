@@ -1,7 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { Upload, X } from 'lucide-react'
 
 interface AddQuestionFormProps {
   gameId: number
@@ -10,22 +11,59 @@ interface AddQuestionFormProps {
 
 export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormProps) {
   const router = useRouter()
+  const fileRef = useRef<HTMLInputElement>(null)
   const [loading, setLoading] = useState(false)
   const [options, setOptions] = useState(['', '', '', ''])
+  const [questionType, setQuestionType] = useState<'MULTIPLE_CHOICE' | 'FILL_IN'>('MULTIPLE_CHOICE')
+  const [points, setPoints] = useState(1)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('bucket', 'events')
+
+      const res = await fetch('/api/upload/events', { method: 'POST', body: formData })
+      const data = await res.json()
+
+      if (res.ok) {
+        setImagePreview(data.url)
+      }
+    } catch {
+      // silent
+    }
+    setUploading(false)
+  }
+
+  const removeImage = () => {
+    setImagePreview(null)
+    if (fileRef.current) fileRef.current.value = ''
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const form = e.currentTarget
     setLoading(true)
     const formData = new FormData(form)
+
     const data: Record<string, unknown> = {
       questionText: formData.get('questionText'),
       correctAnswer: formData.get('correctAnswer'),
+      questionType,
+      points,
+      image: imagePreview || null,
     }
 
-    if (gameType === 'QUIZ') {
+    if (questionType === 'MULTIPLE_CHOICE') {
       data.options = options.filter((o) => o.trim())
     }
+
     if (gameType === 'TEKATEKI') {
       data.clue = formData.get('clue')
     }
@@ -39,6 +77,8 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
     if (res.ok) {
       form.reset()
       setOptions(['', '', '', ''])
+      setPoints(1)
+      setImagePreview(null)
       router.refresh()
     }
     setLoading(false)
@@ -46,6 +86,44 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Tipe Soal</label>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setQuestionType('MULTIPLE_CHOICE')}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
+              questionType === 'MULTIPLE_CHOICE'
+                ? 'text-white'
+                : ''
+            }`}
+            style={{
+              background: questionType === 'MULTIPLE_CHOICE' ? 'var(--violet-pulse)' : 'var(--ink-panel)',
+              color: questionType === 'MULTIPLE_CHOICE' ? 'var(--ash-text)' : 'var(--ash-muted)',
+              border: `1px solid ${questionType === 'MULTIPLE_CHOICE' ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
+            }}
+          >
+            Pilihan Ganda
+          </button>
+          <button
+            type="button"
+            onClick={() => setQuestionType('FILL_IN')}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
+              questionType === 'FILL_IN'
+                ? 'text-white'
+                : ''
+            }`}
+            style={{
+              background: questionType === 'FILL_IN' ? 'var(--violet-pulse)' : 'var(--ink-panel)',
+              color: questionType === 'FILL_IN' ? 'var(--ash-text)' : 'var(--ash-muted)',
+              border: `1px solid ${questionType === 'FILL_IN' ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
+            }}
+          >
+            Isian
+          </button>
+        </div>
+      </div>
+
       <div>
         <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Pertanyaan</label>
         <input
@@ -57,7 +135,52 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
         />
       </div>
 
-      {gameType === 'QUIZ' && (
+      <div>
+        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Gambar Soal (opsional)</label>
+        {imagePreview ? (
+          <div className="relative inline-block">
+            <img src={imagePreview} alt="Preview" className="w-full max-w-xs rounded-lg border" style={{ borderColor: 'var(--ink-border)' }} />
+            <button
+              type="button"
+              onClick={removeImage}
+              className="absolute top-2 right-2 p-1 rounded-full"
+              style={{ background: 'var(--ember-red)', color: 'var(--ash-text)' }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <label className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg cursor-pointer border-2 border-dashed transition-colors" style={{ borderColor: 'var(--ink-border)', background: 'var(--ink-input)' }}>
+            <Upload className="w-6 h-6" style={{ color: 'var(--ash-dim)' }} />
+            <span className="text-sm font-medium" style={{ color: 'var(--ash-muted)' }}>
+              {uploading ? 'Mengupload...' : 'Klik untuk pilih gambar'}
+            </span>
+            <span className="text-xs" style={{ color: 'var(--ash-dim)' }}>JPG, PNG, WebP, GIF (maks 5MB)</span>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={handleImageUpload}
+              disabled={uploading}
+            />
+          </label>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Poin</label>
+        <input
+          type="number"
+          min="1"
+          max="100"
+          value={points}
+          onChange={(e) => setPoints(parseInt(e.target.value) || 1)}
+          className="input-field w-24"
+        />
+      </div>
+
+      {questionType === 'MULTIPLE_CHOICE' && (
         <div>
           <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Pilihan Jawaban</label>
           <div className="grid grid-cols-2 gap-2">
@@ -103,7 +226,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
         />
       </div>
 
-      <button type="submit" disabled={loading} className="btn-primary">
+      <button type="submit" disabled={loading || uploading} className="btn-primary">
         {loading ? 'Menambahkan...' : 'Tambah Pertanyaan'}
       </button>
     </form>

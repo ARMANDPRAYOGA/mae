@@ -44,9 +44,12 @@ model Question {
   id            Int    @id @default(autoincrement())
   gameId        Int
   questionText  String
-  options       String
+  questionType  String @default("MULTIPLE_CHOICE")
+  options       String @default("[]")
   correctAnswer String
   clue          String?
+  points        Int    @default(1)
+  image         String?
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 }
