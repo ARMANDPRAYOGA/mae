@@ -30,6 +30,7 @@ export default function ProfileAvatarUpload({ user }: ProfileAvatarUploadProps) 
 
     const formData = new FormData()
     formData.append('file', file)
+    formData.append('bucket', 'avatars')
 
     setUploading(true)
     setError(null)

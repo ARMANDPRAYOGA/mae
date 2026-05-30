@@ -3,17 +3,30 @@ import { createClient } from '@/app/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import path from 'path'
 
-const BUCKET = 'avatars'
+const BUCKETS = {
+  avatars: {
+    public: true,
+    fileSizeLimit: 2 * 1024 * 1024,
+    allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+  },
+  events: {
+    public: true,
+    fileSizeLimit: 5 * 1024 * 1024,
+    allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+  },
+} as const
 
-async function ensureBucket(supabaseAdmin: ReturnType<typeof createAdminClient>) {
-  const { data: buckets } = await supabaseAdmin.storage.listBuckets()
-  const exists = buckets?.some((b) => b.name === BUCKET)
+type BucketName = keyof typeof BUCKETS
+
+async function ensureBucket(admin: ReturnType<typeof createAdminClient>, name: BucketName) {
+  const { data: buckets, error: listError } = await admin.storage.listBuckets()
+  if (listError) throw new Error(`Gagal cek bucket: ${listError.message}`)
+
+  const exists = buckets?.some((b) => b.name === name)
   if (!exists) {
-    await supabaseAdmin.storage.createBucket(BUCKET, {
-      public: true,
-      fileSizeLimit: 2 * 1024 * 1024,
-      allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-    })
+    const config = BUCKETS[name]
+    const { error: createError } = await admin.storage.createBucket(name, config)
+    if (createError) throw new Error(`Gagal buat bucket "${name}": ${createError.message}`)
   }
 }
 
@@ -27,12 +40,20 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData()
     const file = formData.get('file') as File | null
+    const bucket = (formData.get('bucket') as string || 'avatars') as BucketName
+
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Ukuran file maksimal 2MB' }, { status: 400 })
+    if (!(bucket in BUCKETS)) {
+      return NextResponse.json({ error: `Bucket "${bucket}" tidak valid` }, { status: 400 })
+    }
+
+    const config = BUCKETS[bucket]
+    if (file.size > config.fileSizeLimit) {
+      const maxMB = config.fileSizeLimit / (1024 * 1024)
+      return NextResponse.json({ error: `Ukuran file maksimal ${maxMB}MB` }, { status: 400 })
     }
 
     const supabaseAdmin = createAdminClient(
@@ -40,13 +61,13 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    await ensureBucket(supabaseAdmin)
+    await ensureBucket(supabaseAdmin, bucket)
 
     const ext = path.extname(file.name) || '.jpg'
     const filePath = `${user.id}/${Date.now()}${ext}`
 
     const { error } = await supabase.storage
-      .from(BUCKET)
+      .from(bucket)
       .upload(filePath, file, {
         contentType: file.type,
         upsert: true,
@@ -57,7 +78,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data: urlData } = supabase.storage
-      .from(BUCKET)
+      .from(bucket)
       .getPublicUrl(filePath)
 
     return NextResponse.json({ url: urlData.publicUrl })
