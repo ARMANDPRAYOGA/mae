@@ -1,7 +1,7 @@
 import { prisma } from '@/app/lib/db'
 import { getUser } from '@/app/lib/dal'
 import Navbar from '@/app/components/Navbar'
-import AdminActions from '@/app/components/AdminActions'
+import MembersList from '@/app/components/MembersList'
 
 export default async function AdminMembersPage() {
   const user = await getUser()
@@ -14,6 +14,11 @@ export default async function AdminMembersPage() {
     orderBy: { createdAt: 'desc' },
   })
 
+  const serializedMembers = members.map((m) => ({
+    ...m,
+    createdAt: m.createdAt.toISOString(),
+  }))
+
   return (
     <div className="min-h-screen">
       <Navbar user={user} />
@@ -23,44 +28,7 @@ export default async function AdminMembersPage() {
           <p style={{ color: 'var(--ash-muted)' }}>Lihat dan kelola semua member MAE</p>
         </div>
 
-        <div className="space-y-3">
-          {members.map((member) => {
-            const totalScore = member.scores.reduce((a, s) => a + s.score, 0)
-            return (
-              <div key={member.id} className="card flex flex-col md:flex-row md:items-center gap-4">
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="avatar avatar-md flex-shrink-0">
-                    {member.profilePhoto ? (
-                      <img src={member.profilePhoto} alt={member.name} />
-                    ) : (
-                      member.name.charAt(0).toUpperCase()
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold truncate">{member.name}</p>
-                    <p className="text-sm truncate" style={{ color: 'var(--ash-dim)' }}>
-                      @{member.tiktokName} &middot; ID: {member.id}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div className="text-center">
-                    <p className="text-xs font-semibold" style={{ color: 'var(--ash-dim)' }}>Skor</p>
-                    <p className="text-score">{totalScore}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-semibold" style={{ color: 'var(--ash-dim)' }}>Game</p>
-                    <p className="font-bold">{member.scores.length}</p>
-                  </div>
-                  <span className={`badge ${member.role === 'ADMIN' ? 'badge-admin' : 'badge-member'}`}>
-                    {member.role}
-                  </span>
-                  <AdminActions targetId={member.id} targetRole={member.role} currentUserId={user?.id || ''} />
-                </div>
-              </div>
-            )
-          })}
-        </div>
+        <MembersList members={serializedMembers} currentUserId={user?.id || ''} />
       </main>
     </div>
   )

@@ -425,3 +425,123 @@ select.input-field {
 .animate-in {
   animation: fade-in 0.2s ease-out;
 }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: var(--ink-black);
+  font-weight: 600;
+  font-size: 0.875rem;
+  z-index: 100;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  max-width: 320px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: oklch(0% 0 0 / 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  padding: 16px;
+  animation: fade-in 0.15s ease-out;
+}
+
+.modal-content {
+  background: var(--ink-surface);
+  border: 1px solid var(--ink-border);
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 400px;
+  width: 100%;
+  animation: fade-in 0.2s ease-out;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.modal-message {
+  color: var(--ash-muted);
+  font-size: 0.9375rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Members toolbar */
+.members-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+  .members-toolbar {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.members-search {
+  max-width: 280px;
+}
+
+.members-filters {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--ink-border);
+  background: transparent;
+  color: var(--ash-muted);
+  transition: background 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-chip:hover {
+  background: var(--ink-panel);
+  color: var(--ash-text);
+}
+
+.filter-chip-active {
+  background: var(--violet-pulse);
+  color: var(--ash-text);
+  border-color: var(--violet-pulse);
+}
+
+.filter-chip-active:hover {
+  background: var(--violet-deep);
+  border-color: var(--violet-deep);
+  color: var(--ash-text);
+}
+
+.filter-count {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
