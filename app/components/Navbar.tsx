@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { Home, Gamepad2, Calendar, Trophy, User, Settings, Users, Vote, ChevronDown, Menu, X, LogOut } from 'lucide-react'
 
 interface NavbarProps {
   user?: {
@@ -13,18 +14,18 @@ interface NavbarProps {
 }
 
 const memberLinks = [
-  { href: '/beranda', label: 'Beranda' },
-  { href: '/games', label: 'Games' },
-  { href: '/events', label: 'Events' },
-  { href: '/leaderboard', label: 'Leaderboard' },
-  { href: '/profile', label: 'Profil' },
+  { href: '/beranda', label: 'Beranda', icon: Home },
+  { href: '/games', label: 'Games', icon: Gamepad2 },
+  { href: '/events', label: 'Events', icon: Calendar },
+  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/profile', label: 'Profil', icon: User },
 ]
 
 const adminLinks = [
-  { href: '/admin/members', label: 'Members' },
-  { href: '/admin/games', label: 'Kelola Games' },
-  { href: '/admin/events', label: 'Kelola Events' },
-  { href: '/admin/votes', label: 'Votes' },
+  { href: '/admin/members', label: 'Members', icon: Users },
+  { href: '/admin/games', label: 'Kelola Games', icon: Gamepad2 },
+  { href: '/admin/events', label: 'Kelola Events', icon: Calendar },
+  { href: '/admin/votes', label: 'Votes', icon: Vote },
 ]
 
 export default function Navbar({ user }: NavbarProps) {
@@ -72,15 +73,19 @@ export default function Navbar({ user }: NavbarProps) {
           </Link>
 
           <div className="hidden md:flex items-center gap-1">
-            {memberLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={isActive(link.href) ? 'nav-link nav-link-active' : 'nav-link'}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {memberLinks.map((link) => {
+              const Icon = link.icon
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={isActive(link.href) ? 'nav-link nav-link-active' : 'nav-link'}
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                </Link>
+              )
+            })}
           </div>
 
           {user && (
@@ -94,29 +99,28 @@ export default function Navbar({ user }: NavbarProps) {
                     aria-expanded={adminOpen}
                     aria-haspopup="true"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                    <Settings className="w-4 h-4" />
                     Admin
-                    <svg className={`w-3.5 h-3.5 transition-transform ${adminOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${adminOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {adminOpen && (
                     <div ref={dropdownRef} className="dropdown animate-in" role="menu">
-                      {adminLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          role="menuitem"
-                          onClick={closeAdmin}
-                          className={isActive(link.href) ? 'dropdown-item dropdown-item-active' : 'dropdown-item'}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
+                      {adminLinks.map((link) => {
+                        const Icon = link.icon
+                        return (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            role="menuitem"
+                            onClick={closeAdmin}
+                            className={isActive(link.href) ? 'dropdown-item dropdown-item-active' : 'dropdown-item'}
+                          >
+                            <Icon className="w-4 h-4" />
+                            {link.label}
+                          </Link>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
@@ -133,8 +137,9 @@ export default function Navbar({ user }: NavbarProps) {
                 <form action="/api/auth/logout" method="POST">
                   <button
                     type="submit"
-                    className="btn-secondary logout-btn"
+                    className="btn-secondary logout-btn flex items-center gap-1.5"
                   >
+                    <LogOut className="w-3.5 h-3.5" />
                     Keluar
                   </button>
                 </form>
@@ -148,44 +153,46 @@ export default function Navbar({ user }: NavbarProps) {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
         {mobileOpen && (
           <div className="md:hidden pb-4 animate-in">
-            {memberLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={`block mb-1 ${isActive(link.href) ? 'nav-link nav-link-active' : 'nav-link'}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {memberLinks.map((link) => {
+              const Icon = link.icon
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2 mb-1 ${isActive(link.href) ? 'nav-link nav-link-active' : 'nav-link'}`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                </Link>
+              )
+            })}
 
             {user?.role === 'ADMIN' && (
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--ink-border)' }}>
                 <p className="px-3 text-xs font-semibold mb-2" style={{ color: 'var(--ash-dim)' }}>
                   Admin
                 </p>
-                {adminLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`block mb-1 ${isActive(link.href) ? 'nav-link nav-link-active' : 'nav-link'}`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {adminLinks.map((link) => {
+                  const Icon = link.icon
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-2 mb-1 ${isActive(link.href) ? 'nav-link nav-link-active' : 'nav-link'}`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {link.label}
+                    </Link>
+                  )
+                })}
               </div>
             )}
 
@@ -198,7 +205,8 @@ export default function Navbar({ user }: NavbarProps) {
                   </span>
                 </span>
                 <form action="/api/auth/logout" method="POST">
-                  <button type="submit" className="btn-secondary text-xs py-1 px-3 ml-3">
+                  <button type="submit" className="btn-secondary text-xs py-1 px-3 ml-3 flex items-center gap-1.5">
+                    <LogOut className="w-3.5 h-3.5" />
                     Keluar
                   </button>
                 </form>

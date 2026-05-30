@@ -320,6 +320,9 @@ select.input-field {
   text-decoration: none;
   transition: background 0.15s ease-out, color 0.15s ease-out;
   line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav-link:hover {
@@ -349,7 +352,9 @@ select.input-field {
 }
 
 .dropdown-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -358,8 +363,6 @@ select.input-field {
   text-decoration: none;
   transition: background 0.15s ease-out, color 0.15s ease-out;
   min-height: 40px;
-  display: flex;
-  align-items: center;
 }
 
 .dropdown-item:hover {
