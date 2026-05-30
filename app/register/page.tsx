@@ -13,7 +13,7 @@ export default function RegisterPage() {
         <div className="card max-w-md w-full text-center">
           <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--green-ok)' }}>Registrasi Berhasil!</h1>
           <p className="text-sm mb-6" style={{ color: 'var(--ash-muted)' }}>
-            Akun kamu sudah dibuat. Silakan login untuk mulai bermain!
+            Akun kamu sudah dibuat. Cek email untuk konfirmasi, lalu login.
           </p>
           <Link href="/login" className="btn-primary w-full">
             Login Sekarang

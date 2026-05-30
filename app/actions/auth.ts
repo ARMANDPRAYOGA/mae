@@ -60,7 +60,7 @@ export async function register(state: FormState | undefined, formData: FormData)
     return { message: 'Username atau email sudah digunakan.' }
   }
 
-  return { success: true, message: 'Registrasi berhasil! Silakan login.' }
+  return { success: true, message: 'Registrasi berhasil! Cek email kamu untuk konfirmasi.' }
 }
 
 export async function login(state: FormState | undefined, formData: FormData): Promise<FormState> {
@@ -94,6 +94,9 @@ export async function login(state: FormState | undefined, formData: FormData): P
   })
 
   if (error) {
+    if (error.message === 'Email not confirmed') {
+      return { message: 'Email belum dikonfirmasi. Cek inbox kamu.' }
+    }
     return { message: 'Username atau sandi salah.' }
   }
 
