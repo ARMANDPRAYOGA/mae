@@ -30,11 +30,19 @@ export default async function AdminGamesPage() {
             <div key={game.id} className="card flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className={`badge ${game.type === 'QUIZ' ? 'badge-quiz' : 'badge-tekateki'}`}>
-                    {game.type === 'QUIZ' ? 'Quiz' : 'Teka-Teki'}
+                  <span className={`badge ${
+                    game.type === 'QUIZ' ? 'badge-quiz' :
+                    game.type === 'TEKATEKI' ? 'badge-tekateki' :
+                    game.type === 'TEBAK_GAMBAR' ? 'badge-tekateki' :
+                    'badge-quiz'
+                  }`}>
+                    {game.type === 'QUIZ' ? 'Quiz' :
+                     game.type === 'TEKATEKI' ? 'Teka-Teki' :
+                     game.type === 'TEBAK_GAMBAR' ? 'Tebak Gambar' :
+                     'Mini Puzzle'}
                   </span>
                 </div>
-                <h3 className="font-semibold">{game.title}</h3>
+                <h3 className="font-semibold text-xl">{game.title}</h3>
                 <p className="text-sm" style={{ color: 'var(--ash-dim)' }}>
                   {game._count.questions} soal &middot; {game._count.scores} pemain
                 </p>

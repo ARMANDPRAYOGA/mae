@@ -227,6 +227,11 @@ select.input-field {
   min-height: 44px;
 }
 
+.flex-1 > .input-field,
+.flex > .input-field {
+  width: auto;
+}
+
 .input-field::placeholder {
   color: var(--ash-dim);
 }
