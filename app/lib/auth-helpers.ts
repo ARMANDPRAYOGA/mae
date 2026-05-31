@@ -19,7 +19,7 @@ export async function requireAuth() {
   if (!user) {
     return { user: null, error: 'Unauthorized', status: 401 as const }
   }
-  return { user, error: null, status: null as const }
+  return { user, error: null, status: undefined }
 }
 
 export async function requireAdmin() {
@@ -30,5 +30,5 @@ export async function requireAdmin() {
   if (user.role !== 'ADMIN') {
     return { user: null, error: 'Forbidden', status: 403 as const }
   }
-  return { user, error: null, status: null as const }
+  return { user, error: null, status: undefined }
 }
