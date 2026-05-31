@@ -53,15 +53,19 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
     setLoading(true)
     const formData = new FormData(form)
 
+    const effectiveQuestionType = gameType === 'MINI_PUZZLE' ? 'PUZZLE' :
+                                  gameType === 'TEBAK_GAMBAR' ? 'FILL_IN' :
+                                  questionType
+
     const data: Record<string, unknown> = {
-      questionText: formData.get('questionText'),
-      correctAnswer: formData.get('correctAnswer'),
-      questionType,
+      questionText: formData.get('questionText') || (gameType === 'MINI_PUZZLE' ? 'Susun puzzle' : ''),
+      correctAnswer: formData.get('correctAnswer') || (gameType === 'MINI_PUZZLE' ? 'puzzle' : ''),
+      questionType: effectiveQuestionType,
       points,
       image: imagePreview || null,
     }
 
-    if (questionType === 'MULTIPLE_CHOICE') {
+    if (effectiveQuestionType === 'MULTIPLE_CHOICE') {
       data.options = options.filter((o) => o.trim())
     }
 
