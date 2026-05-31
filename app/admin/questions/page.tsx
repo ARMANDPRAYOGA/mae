@@ -30,7 +30,10 @@ export default async function QuestionsPage({ searchParams }: { searchParams: Pr
         <div className="mb-10">
           <h1 className="text-3xl font-bold mb-2">{game.title}</h1>
           <p style={{ color: 'var(--ash-muted)' }}>
-            Kelola pertanyaan &middot; Tipe: {game.type === 'QUIZ' ? 'Quiz' : 'Teka-Teki'}
+            Kelola pertanyaan &middot; Tipe: {game.type === 'QUIZ' ? 'Quiz' :
+              game.type === 'TEKATEKI' ? 'Teka-Teki' :
+              game.type === 'TEBAK_GAMBAR' ? 'Tebak Gambar' :
+              'Mini Puzzle'}
           </p>
         </div>
 
@@ -45,17 +48,28 @@ export default async function QuestionsPage({ searchParams }: { searchParams: Pr
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <p className="text-xs font-semibold" style={{ color: 'var(--ash-dim)' }}>Soal {i + 1}</p>
+                    <p className="text-xs font-semibold" style={{ color: 'var(--ash-dim)' }}>
+                      {game.type === 'MINI_PUZZLE' ? 'Puzzle' : `Soal ${i + 1}`}
+                    </p>
                     <span className="badge" style={{ background: 'var(--ink-panel)', color: 'var(--ash-muted)' }}>
-                      {q.questionType === 'MULTIPLE_CHOICE' ? 'Pilihan Ganda' : 'Isian'}
+                      {q.questionType === 'MULTIPLE_CHOICE' ? 'Pilihan Ganda' :
+                       q.questionType === 'PUZZLE' ? 'Puzzle' :
+                       'Isian'}
                     </span>
                     <span className="badge badge-gold">{q.points} poin</span>
                   </div>
-                  <p className="font-medium mb-2">{q.questionText}</p>
+                  {game.type !== 'MINI_PUZZLE' && (
+                    <p className="font-medium mb-2">{q.questionText}</p>
+                  )}
                   {q.image && (
                     <img src={q.image} alt="Gambar soal" className="w-full max-w-xs rounded-lg mb-2 border" style={{ borderColor: 'var(--ink-border)' }} />
                   )}
-                  {q.questionType === 'MULTIPLE_CHOICE' && (
+                  {game.type === 'MINI_PUZZLE' && q.options && (
+                    <p className="text-sm mb-2" style={{ color: 'var(--ash-muted)' }}>
+                      Grid: {JSON.parse(q.options).gridSize || 3}x{JSON.parse(q.options).gridSize || 3}
+                    </p>
+                  )}
+                  {q.questionType === 'MULTIPLE_CHOICE' && q.options && (
                     <div className="flex flex-wrap gap-2 mb-2">
                       {JSON.parse(q.options).map((opt: string, j: number) => (
                         <span
@@ -73,7 +87,9 @@ export default async function QuestionsPage({ searchParams }: { searchParams: Pr
                       <span style={{ color: 'var(--sakura-glow)' }}>Clue:</span> {q.clue}
                     </p>
                   )}
-                  <p className="text-xs mt-1" style={{ color: 'var(--green-ok)' }}>Jawaban: {q.correctAnswer}</p>
+                  {game.type !== 'MINI_PUZZLE' && (
+                    <p className="text-xs mt-1" style={{ color: 'var(--green-ok)' }}>Jawaban: {q.correctAnswer}</p>
+                  )}
                 </div>
                 <DeleteQuestionButton questionId={q.id} gameId={gameId} />
               </div>
