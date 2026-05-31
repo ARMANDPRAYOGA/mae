@@ -18,6 +18,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
   const [points, setPoints] = useState(1)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [puzzleGrid, setPuzzleGrid] = useState(3)
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -68,6 +69,10 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
       data.clue = formData.get('clue')
     }
 
+    if (gameType === 'MINI_PUZZLE') {
+      data.options = JSON.stringify({ gridSize: puzzleGrid })
+    }
+
     const res = await fetch(`/api/games/${gameId}/questions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -86,57 +91,65 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Tipe Soal</label>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => setQuestionType('MULTIPLE_CHOICE')}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
-              questionType === 'MULTIPLE_CHOICE'
-                ? 'text-white'
-                : ''
-            }`}
-            style={{
-              background: questionType === 'MULTIPLE_CHOICE' ? 'var(--violet-pulse)' : 'var(--ink-panel)',
-              color: questionType === 'MULTIPLE_CHOICE' ? 'var(--ash-text)' : 'var(--ash-muted)',
-              border: `1px solid ${questionType === 'MULTIPLE_CHOICE' ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
-            }}
-          >
-            Pilihan Ganda
-          </button>
-          <button
-            type="button"
-            onClick={() => setQuestionType('FILL_IN')}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
-              questionType === 'FILL_IN'
-                ? 'text-white'
-                : ''
-            }`}
-            style={{
-              background: questionType === 'FILL_IN' ? 'var(--violet-pulse)' : 'var(--ink-panel)',
-              color: questionType === 'FILL_IN' ? 'var(--ash-text)' : 'var(--ash-muted)',
-              border: `1px solid ${questionType === 'FILL_IN' ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
-            }}
-          >
-            Isian
-          </button>
+      {gameType !== 'TEBAK_GAMBAR' && gameType !== 'MINI_PUZZLE' && (
+        <div>
+          <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Tipe Soal</label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setQuestionType('MULTIPLE_CHOICE')}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
+                questionType === 'MULTIPLE_CHOICE'
+                  ? 'text-white'
+                  : ''
+              }`}
+              style={{
+                background: questionType === 'MULTIPLE_CHOICE' ? 'var(--violet-pulse)' : 'var(--ink-panel)',
+                color: questionType === 'MULTIPLE_CHOICE' ? 'var(--ash-text)' : 'var(--ash-muted)',
+                border: `1px solid ${questionType === 'MULTIPLE_CHOICE' ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
+              }}
+            >
+              Pilihan Ganda
+            </button>
+            <button
+              type="button"
+              onClick={() => setQuestionType('FILL_IN')}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
+                questionType === 'FILL_IN'
+                  ? 'text-white'
+                  : ''
+              }`}
+              style={{
+                background: questionType === 'FILL_IN' ? 'var(--violet-pulse)' : 'var(--ink-panel)',
+                color: questionType === 'FILL_IN' ? 'var(--ash-text)' : 'var(--ash-muted)',
+                border: `1px solid ${questionType === 'FILL_IN' ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
+              }}
+            >
+              Isian
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+
+      {gameType !== 'MINI_PUZZLE' && (
+        <div>
+          <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>
+            {gameType === 'TEBAK_GAMBAR' ? 'Petunjuk / Pertanyaan' : 'Pertanyaan'}
+          </label>
+          <input
+            type="text"
+            name="questionText"
+            placeholder={gameType === 'TEBAK_GAMBAR' ? 'Apa yang ada di gambar ini?' : 'Tulis pertanyaan...'}
+            className="input-field"
+            required
+          />
+        </div>
+      )}
 
       <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Pertanyaan</label>
-        <input
-          type="text"
-          name="questionText"
-          placeholder="Tulis pertanyaan..."
-          className="input-field"
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Gambar Soal (opsional)</label>
+        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>
+          Gambar {(gameType === 'TEBAK_GAMBAR' || gameType === 'MINI_PUZZLE') ? '' : '(opsional)'}
+        </label>
         {imagePreview ? (
           <div className="relative inline-block">
             <img src={imagePreview} alt="Preview" className="w-full max-w-xs rounded-lg border" style={{ borderColor: 'var(--ink-border)' }} />
@@ -163,10 +176,35 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
               className="hidden"
               onChange={handleImageUpload}
               disabled={uploading}
+              required={gameType === 'TEBAK_GAMBAR' || gameType === 'MINI_PUZZLE'}
             />
           </label>
         )}
       </div>
+
+      {gameType === 'MINI_PUZZLE' && (
+        <div>
+          <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Ukuran Grid Puzzle</label>
+          <div className="flex gap-2">
+            {[2, 3, 4, 5].map((size) => (
+              <button
+                key={size}
+                type="button"
+                onClick={() => setPuzzleGrid(size)}
+                className="flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-colors"
+                style={{
+                  background: puzzleGrid === size ? 'var(--violet-pulse)' : 'var(--ink-panel)',
+                  color: puzzleGrid === size ? 'var(--ash-text)' : 'var(--ash-muted)',
+                  border: `1px solid ${puzzleGrid === size ? 'var(--violet-pulse)' : 'var(--ink-border)'}`,
+                }}
+              >
+                {size}x{size}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs mt-1" style={{ color: 'var(--ash-dim)' }}>Gambar akan dipotong menjadi {puzzleGrid}x{puzzleGrid} = {puzzleGrid * puzzleGrid} bagian</p>
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Poin</label>
@@ -215,16 +253,18 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
         </div>
       )}
 
-      <div>
-        <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Jawaban Benar</label>
-        <input
-          type="text"
-          name="correctAnswer"
-          placeholder="Jawaban yang benar"
-          className="input-field"
-          required
-        />
-      </div>
+      {gameType !== 'MINI_PUZZLE' && (
+        <div>
+          <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Jawaban Benar</label>
+          <input
+            type="text"
+            name="correctAnswer"
+            placeholder="Jawaban yang benar"
+            className="input-field"
+            required
+          />
+        </div>
+      )}
 
       <button type="submit" disabled={loading || uploading} className="btn-primary">
         {loading ? 'Menambahkan...' : 'Tambah Pertanyaan'}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import TebakGambar from '@/app/components/TebakGambar'
+import MiniPuzzle from '@/app/components/MiniPuzzle'
 
 interface Question {
   id: number
@@ -36,6 +38,7 @@ export default function PlayGamePage() {
   const [loading, setLoading] = useState(true)
   const [answer, setAnswer] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [puzzleCompleted, setPuzzleCompleted] = useState(false)
 
   useEffect(() => {
     fetch(`/api/games/${params.id}?shuffle=true`)
@@ -159,7 +162,9 @@ export default function PlayGamePage() {
 
   const question = game.questions[current]
   const options = question.options ? JSON.parse(question.options) : []
-  const allAnswered = Object.keys(answers).length === game.questions.length
+  const allAnswered = game.type === 'MINI_PUZZLE'
+    ? puzzleCompleted
+    : Object.keys(answers).length === game.questions.length
 
   return (
     <div className="min-h-screen">
@@ -191,58 +196,89 @@ export default function PlayGamePage() {
             <span className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold" style={{ background: 'var(--violet-pulse)', color: 'var(--ash-text)' }}>
               {current + 1}
             </span>
-            <span className={`badge ${question.questionType === 'MULTIPLE_CHOICE' ? 'badge-quiz' : 'badge-tekateki'}`}>
-              {question.questionType === 'MULTIPLE_CHOICE' ? 'Pilihan Ganda' : 'Isian'}
+            <span className={`badge ${
+              game.type === 'TEBAK_GAMBAR' ? 'badge-tekateki' :
+              game.type === 'MINI_PUZZLE' ? 'badge-tekateki' :
+              question.questionType === 'MULTIPLE_CHOICE' ? 'badge-quiz' : 'badge-tekateki'
+            }`}>
+              {game.type === 'TEBAK_GAMBAR' ? 'Tebak Gambar' :
+               game.type === 'MINI_PUZZLE' ? 'Puzzle' :
+               question.questionType === 'MULTIPLE_CHOICE' ? 'Pilihan Ganda' : 'Isian'}
             </span>
             <span className="badge badge-gold">{question.points} poin</span>
           </div>
 
-          <p className="text-lg font-medium mb-5">{question.questionText}</p>
-
-          {question.image && (
-            <img src={question.image} alt="Gambar soal" className="w-full max-w-sm rounded-lg mb-5 border" style={{ borderColor: 'var(--ink-border)' }} />
-          )}
-
-          {game.type === 'TEKATEKI' && question.clue && (
-            <div className="rounded-lg p-4 mb-5" style={{ background: 'var(--ink-panel)' }}>
-              <p className="text-sm">
-                <span className="font-semibold" style={{ color: 'var(--sakura-glow)' }}>Clue:</span>{' '}
-                <span style={{ color: 'var(--ash-muted)' }}>{question.clue}</span>
-              </p>
-            </div>
-          )}
-
-          {question.questionType === 'MULTIPLE_CHOICE' ? (
-            <div className="space-y-2">
-              {options.map((opt: string, i: number) => (
-                <button
-                  key={i}
-                  onClick={() => handleSelectOption(opt)}
-                  className="w-full text-left p-4 rounded-lg border transition-all"
-                  style={{
-                    background: answers[question.id] === opt ? 'var(--violet-glow)' : 'var(--ink-panel)',
-                    borderColor: answers[question.id] === opt ? 'var(--violet-pulse)' : 'var(--ink-border)',
-                    color: 'var(--ash-text)',
-                  }}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
+          {game.type === 'TEBAK_GAMBAR' ? (
+            <TebakGambar
+              question={question}
+              onAnswer={(ans) => {
+                setAnswers({ ...answers, [question.id]: ans })
+                if (current < game.questions.length - 1) {
+                  setTimeout(() => setCurrent(current + 1), 300)
+                }
+              }}
+              currentAnswer={answers[question.id]}
+            />
+          ) : game.type === 'MINI_PUZZLE' ? (
+            <MiniPuzzle
+              question={question}
+              onComplete={(correct) => {
+                if (correct) {
+                  setAnswers({ ...answers, [question.id]: 'completed' })
+                  setPuzzleCompleted(true)
+                }
+              }}
+            />
           ) : (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAnswer()}
-                placeholder="Jawaban kamu..."
-                className="input-field flex-1"
-              />
-              <button onClick={handleAnswer} className="btn-primary px-6">
-                {current < game.questions.length - 1 ? 'Next' : 'Jawab'}
-              </button>
-            </div>
+            <>
+              <p className="text-lg font-medium mb-5">{question.questionText}</p>
+
+              {question.image && (
+                <img src={question.image} alt="Gambar soal" className="w-full max-w-sm rounded-lg mb-5 border" style={{ borderColor: 'var(--ink-border)' }} />
+              )}
+
+              {game.type === 'TEKATEKI' && question.clue && (
+                <div className="rounded-lg p-4 mb-5" style={{ background: 'var(--ink-panel)' }}>
+                  <p className="text-sm">
+                    <span className="font-semibold" style={{ color: 'var(--sakura-glow)' }}>Clue:</span>{' '}
+                    <span style={{ color: 'var(--ash-muted)' }}>{question.clue}</span>
+                  </p>
+                </div>
+              )}
+
+              {question.questionType === 'MULTIPLE_CHOICE' ? (
+                <div className="space-y-2">
+                  {options.map((opt: string, i: number) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSelectOption(opt)}
+                      className="w-full text-left p-4 rounded-lg border transition-all"
+                      style={{
+                        background: answers[question.id] === opt ? 'var(--violet-glow)' : 'var(--ink-panel)',
+                        borderColor: answers[question.id] === opt ? 'var(--violet-pulse)' : 'var(--ink-border)',
+                        color: 'var(--ash-text)',
+                      }}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAnswer()}
+                    placeholder="Jawaban kamu..."
+                    className="input-field flex-1"
+                  />
+                  <button onClick={handleAnswer} className="btn-primary px-6">
+                    {current < game.questions.length - 1 ? 'Next' : 'Jawab'}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
 

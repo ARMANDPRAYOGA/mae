@@ -33,8 +33,16 @@ export default async function GamesPage() {
               return (
                 <div key={game.id} className="card card-interactive flex flex-col">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className={`badge ${game.type === 'QUIZ' ? 'badge-quiz' : 'badge-tekateki'}`}>
-                      {game.type === 'QUIZ' ? 'Quiz' : 'Teka-Teki'}
+                    <span className={`badge ${
+                      game.type === 'QUIZ' ? 'badge-quiz' :
+                      game.type === 'TEKATEKI' ? 'badge-tekateki' :
+                      game.type === 'TEBAK_GAMBAR' ? 'badge-tekateki' :
+                      'badge-quiz'
+                    }`}>
+                      {game.type === 'QUIZ' ? 'Quiz' :
+                       game.type === 'TEKATEKI' ? 'Teka-Teki' :
+                       game.type === 'TEBAK_GAMBAR' ? 'Tebak Gambar' :
+                       'Mini Puzzle'}
                     </span>
                     <span className="text-xs" style={{ color: 'var(--ash-dim)' }}>{game._count.questions} soal</span>
                   </div>

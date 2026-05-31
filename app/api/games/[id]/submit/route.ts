@@ -13,14 +13,28 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = await req.json()
   const answers: Record<string, string> = body.answers
 
-  const questions = await prisma.question.findMany({ where: { gameId } })
+  const game = await prisma.game.findUnique({
+    where: { id: gameId },
+    include: { questions: true },
+  })
 
+  if (!game) {
+    return NextResponse.json({ error: 'Game not found' }, { status: 404 })
+  }
+
+  const questions = game.questions
   let score = 0
   const results: Record<string, { correct: boolean; points: number }> = {}
 
   for (const q of questions) {
     const userAnswer = answers[q.id.toString()]
-    const isCorrect = userAnswer && userAnswer.toLowerCase().trim() === q.correctAnswer.toLowerCase().trim()
+    let isCorrect = false
+
+    if (game.type === 'MINI_PUZZLE') {
+      isCorrect = userAnswer === 'completed'
+    } else {
+      isCorrect = !!userAnswer && userAnswer.toLowerCase().trim() === q.correctAnswer.toLowerCase().trim()
+    }
 
     if (isCorrect) {
       score += q.points

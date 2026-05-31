@@ -42,6 +42,8 @@ export default function CreateGameForm() {
       <select name="type" className="input-field md:w-48" required>
         <option value="QUIZ">Quiz</option>
         <option value="TEKATEKI">Teka-Teki</option>
+        <option value="TEBAK_GAMBAR">Tebak Gambar</option>
+        <option value="MINI_PUZZLE">Mini Puzzle</option>
       </select>
       <button type="submit" disabled={loading} className="btn-primary">
         {loading ? 'Membuat...' : 'Buat Game'}
