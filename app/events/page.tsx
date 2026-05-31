@@ -1,6 +1,7 @@
 import { prisma } from '@/app/lib/db'
 import { getUser } from '@/app/lib/dal'
 import Navbar from '@/app/components/Navbar'
+import Link from 'next/link'
 
 export default async function EventsPage() {
   const user = await getUser()
@@ -41,8 +42,8 @@ export default async function EventsPage() {
                     </span>
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                  <p className="text-sm mb-3" style={{ color: 'var(--ash-muted)' }}>{event.description}</p>
-                  <p className="text-xs" style={{ color: 'var(--ash-dim)' }}>
+                  <p className="text-sm mb-3 line-clamp-2" style={{ color: 'var(--ash-muted)' }}>{event.description}</p>
+                  <p className="text-xs mb-4" style={{ color: 'var(--ash-dim)' }}>
                     {event.startDate.toLocaleDateString('id-ID', {
                       day: 'numeric', month: 'long', year: 'numeric',
                     })}{' '}-{' '}
@@ -50,6 +51,9 @@ export default async function EventsPage() {
                       day: 'numeric', month: 'long', year: 'numeric',
                     })}
                   </p>
+                  <Link href={`/events/${event.id}`} className="btn-secondary text-sm w-full text-center">
+                    Detail
+                  </Link>
                 </div>
               )
             })}
