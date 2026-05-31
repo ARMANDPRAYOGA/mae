@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
+import RouteProgress from "./components/RouteProgress";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +30,9 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
+        <Suspense fallback={null}>
+          <RouteProgress />
+        </Suspense>
         {children}
       </body>
     </html>

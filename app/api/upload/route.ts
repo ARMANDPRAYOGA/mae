@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/app/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { requireAuth } from '@/app/lib/auth-helpers'
 import path from 'path'
 
 const BUCKET = 'avatars'
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { user, error, status } = await requireAuth()
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error }, { status })
     }
 
     const formData = await req.formData()
@@ -50,18 +49,18 @@ export async function POST(req: NextRequest) {
     const ext = path.extname(file.name) || '.jpg'
     const filePath = `${user.id}/${Date.now()}${ext}`
 
-    const { error } = await supabase.storage
+    const { error: uploadError } = await supabaseAdmin.storage
       .from(BUCKET)
       .upload(filePath, file, {
         contentType: file.type,
         upsert: true,
       })
 
-    if (error) {
-      return NextResponse.json({ error: `Upload gagal: ${error.message}` }, { status: 500 })
+    if (uploadError) {
+      return NextResponse.json({ error: `Upload gagal: ${uploadError.message}` }, { status: 500 })
     }
 
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = supabaseAdmin.storage
       .from(BUCKET)
       .getPublicUrl(filePath)
 

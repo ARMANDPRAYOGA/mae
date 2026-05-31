@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useRef } from 'react'
-import { Upload, X } from 'lucide-react'
+import { Upload, X, Loader2 } from 'lucide-react'
 
 export default function CreateEventForm() {
   const router = useRouter()
@@ -105,9 +105,13 @@ export default function CreateEventForm() {
             </button>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center gap-2 p-6 rounded-lg cursor-pointer border-2 border-dashed transition-colors" style={{ borderColor: 'var(--ink-border)', background: 'var(--ink-input)' }}>
-            <Upload className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} />
-            <span className="text-sm font-medium" style={{ color: 'var(--ash-muted)' }}>
+          <label className="flex flex-col items-center justify-center gap-2 p-6 rounded-lg cursor-pointer border-2 border-dashed transition-colors" style={{ borderColor: uploading ? 'var(--violet-pulse)' : 'var(--ink-border)', background: uploading ? 'var(--violet-glow)' : 'var(--ink-input)' }}>
+            {uploading ? (
+              <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--violet-pulse)' }} />
+            ) : (
+              <Upload className="w-8 h-8" style={{ color: 'var(--ash-dim)' }} />
+            )}
+            <span className="text-sm font-medium" style={{ color: uploading ? 'var(--violet-pulse)' : 'var(--ash-muted)' }}>
               {uploading ? 'Mengupload...' : 'Klik untuk pilih gambar'}
             </span>
             <span className="text-xs" style={{ color: 'var(--ash-dim)' }}>JPG, PNG, WebP, GIF (maks 5MB)</span>

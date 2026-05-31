@@ -548,3 +548,128 @@ select.input-field {
   font-size: 0.75rem;
   opacity: 0.8;
 }
+
+/* Route Progress Bar */
+.route-progress {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 49;
+  background: transparent;
+  transition: opacity 0.3s ease-out;
+}
+
+.route-progress-bar {
+  height: 100%;
+  background: var(--violet-pulse);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Skeleton Shimmer */
+.skeleton {
+  background: var(--ink-surface);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--ink-panel) 40%,
+    var(--ink-panel) 60%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s ease-in-out infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-text {
+  height: 16px;
+  border-radius: 4px;
+}
+
+.skeleton-text-sm {
+  height: 12px;
+  border-radius: 4px;
+  width: 60%;
+}
+
+.skeleton-avatar {
+  border-radius: 9999px;
+}
+
+.skeleton-card {
+  height: 120px;
+}
+
+/* Upload Overlay */
+.upload-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: oklch(0% 0 0 / 0.6);
+  border-radius: 9999px;
+  gap: 8px;
+}
+
+.upload-overlay-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ash-text);
+}
+
+/* Button Loading State */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.btn-loading > * {
+  opacity: 0.5;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 9999px;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+
+  .route-progress-bar {
+    transition: none;
+  }
+
+  .btn-loading::after {
+    animation: none;
+    border-top-color: transparent;
+    border-left-color: currentColor;
+  }
+}

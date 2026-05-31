@@ -80,8 +80,9 @@ export default function ProfileAvatarUpload({ user }: ProfileAvatarUploadProps) 
           <Camera className="w-6 h-6 text-white" />
         </div>
         {uploading && (
-          <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/60">
+          <div className="upload-overlay">
             <Loader2 className="w-5 h-5 text-white animate-spin" />
+            <span className="upload-overlay-text">Mengupload...</span>
           </div>
         )}
         <input
