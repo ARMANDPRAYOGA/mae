@@ -222,7 +222,7 @@ export default function AddQuestionForm({ gameId, gameType }: AddQuestionFormPro
         />
       </div>
 
-      {questionType === 'MULTIPLE_CHOICE' && (
+      {gameType !== 'MINI_PUZZLE' && gameType !== 'TEBAK_GAMBAR' && questionType === 'MULTIPLE_CHOICE' && (
         <div>
           <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ash-muted)' }}>Pilihan Jawaban</label>
           <div className="grid grid-cols-2 gap-2">
