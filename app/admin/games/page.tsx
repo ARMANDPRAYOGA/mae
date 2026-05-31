@@ -2,6 +2,7 @@ import { prisma } from '@/app/lib/db'
 import { getUser } from '@/app/lib/dal'
 import Navbar from '@/app/components/Navbar'
 import CreateGameForm from '@/app/components/CreateGameForm'
+import DeleteGameButton from '@/app/components/DeleteGameButton'
 import Link from 'next/link'
 
 export default async function AdminGamesPage() {
@@ -58,20 +59,5 @@ export default async function AdminGamesPage() {
         </div>
       </main>
     </div>
-  )
-}
-
-function DeleteGameButton({ gameId }: { gameId: number }) {
-  async function handleDelete() {
-    'use server'
-    await prisma.game.delete({ where: { id: gameId } })
-  }
-
-  return (
-    <form action={handleDelete}>
-      <button type="submit" className="btn-danger text-sm py-1 px-3">
-        Hapus
-      </button>
-    </form>
   )
 }
